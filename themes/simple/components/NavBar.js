@@ -20,7 +20,8 @@ export default function NavBar(props) {
   const { isDarkMode, toggleDarkMode } = useGlobal()
   const { navRef, canvasRef } = useLiquidGlassNavigation(isDarkMode)
 
-  const appearanceRef = useRef(null)
+  const { navRef: appearanceRef, canvasRef: appearanceCanvasRef } =
+    useLiquidGlassNavigation(isDarkMode, true)
   const transitionRef = useRef(null)
 
   const changeAppearance = dayMode => {
@@ -90,7 +91,9 @@ export default function NavBar(props) {
   return (
     <>
       <div ref={appearanceRef} className='simple-appearance-toggle' data-liquid-glass-ignore>
+        <canvas ref={appearanceCanvasRef} className='simple-optical-canvas' aria-hidden='true' />
         <PixelToggle
+          className='simple-appearance-control'
           options={{
             checked: !isDarkMode,
             onCheckedChange: changeAppearance,

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 // Upstream: KaedeharaKazuha1029/web-liquid-glass, AGPL-3.0-or-later.
 // Revision: 397722ad096e50fe42c8fdd8782cd3f74ab37b35
 
-export default function useLiquidGlassNavigation(isDarkMode) {
+export default function useLiquidGlassNavigation(isDarkMode, backgroundOnly = false) {
   const navRef = useRef(null)
   const canvasRef = useRef(null)
   const glassRef = useRef(null)
@@ -33,6 +33,11 @@ export default function useLiquidGlassNavigation(isDarkMode) {
           navElement: nav,
           canvas,
           sceneRoot,
+          ...(backgroundOnly && {
+            // Keep the optical canvas out of the switch's drag and tap handling.
+            pointerElement: canvas,
+            autoLabelContrast: false
+          }),
           onError: () => { delete nav.dataset.opticalGlass }
         })
         glassRef.current = glass
@@ -60,7 +65,7 @@ export default function useLiquidGlassNavigation(isDarkMode) {
       motion.removeEventListener('change', syncMotion)
       stop()
     }
-  }, [])
+  }, [backgroundOnly])
 
   useEffect(() => {
     glassRef.current?.refreshScene()

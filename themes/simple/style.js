@@ -180,7 +180,7 @@ const Style = () => {
     pointer-events: none;
   }
 
-  #theme-simple .simple-glass-nav[data-optical-glass] .simple-optical-canvas {
+  #theme-simple :is(.simple-glass-nav, .simple-appearance-toggle)[data-optical-glass] > .simple-optical-canvas {
     visibility: visible;
   }
 
@@ -208,6 +208,17 @@ const Style = () => {
     overflow: hidden;
     border: 1px solid var(--glass-edge);
     border-radius: 1rem;
+  }
+
+  #theme-simple .simple-appearance-toggle:not([data-optical-glass]) {
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+  }
+
+  #theme-simple .simple-appearance-control {
+    position: relative;
+    z-index: 1;
   }
 
   html.simple-appearance-reveal::view-transition-old(root),

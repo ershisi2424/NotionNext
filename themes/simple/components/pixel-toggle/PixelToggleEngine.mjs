@@ -121,7 +121,11 @@ void main() {
   surface = mix(surface, mix(hue, vec3(1.0), mix(0.68, 0.4, theme)), 1.0 - smoothstep(-0.6, 0.6, led));
   float grain = fract(sin(dot(floor(gl_FragCoord.xy), vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
   surface += grain * 0.021 * mix(1.0, 0.0, gallery * smoothstep(130.0, 240.0, max(track, distanceToLight)));
-  color = vec4(clamp(surface, 0.0, 1.0), 1.0);
+  // Keep the original track and light ribbon above the site's optical glass.
+  float trackCoverage = 1.0 - smoothstep(-0.65, 0.65, track);
+  float ribbonCoverage = 1.0 - smoothstep(-0.6, 0.6, led);
+  float coverage = max(trackCoverage, max(ribbonCoverage, clamp(sceneLight + 0.45 * shadow, 0.0, 1.0)));
+  color = vec4(clamp(surface, 0.0, 1.0), coverage);
 }`;
 function compile(gl, kind, source) {
   const shader = gl.createShader(kind);
@@ -137,7 +141,7 @@ function createGlassRenderer(canvas, { width, height, scale, dpr, gallery }) {
   const mask = document.createElement("canvas");
   mask.width = mask.height = 256;
   const ctx = mask.getContext("2d");
-  const gl = ctx && canvas.getContext("webgl2", { alpha: false, antialias: false, depth: false, stencil: false });
+  const gl = ctx && canvas.getContext("webgl2", { alpha: true, premultipliedAlpha: false, antialias: false, depth: false, stencil: false });
   if (!gl) return null;
   const vertex = compile(gl, gl.VERTEX_SHADER, vertexShader);
   const fragment = compile(gl, gl.FRAGMENT_SHADER, fragmentShader);
@@ -823,7 +827,7 @@ function createPixelToggle(host, initial, css2, preview = false) {
 }
 
 // src/lib/motion-core/pixel-toggle-entry.js
-var css = ".pixel-scene {\n  position: relative;\n  display: grid;\n  min-height: var(--motion-height, 540px);\n  place-items: center;\n  isolation: isolate;\n  overflow: hidden;\n  background: radial-gradient(ellipse 140% 155% at 92% -8%, var(--halo), var(--background) 84%);\n}\n\n.pixel-scene[data-preview] { background: #f4f4f4; }\n\n.pixel-switch {\n  position: relative;\n  width: 520px;\n  height: 272px;\n  padding: 0;\n  border: 0;\n  border-radius: 86px;\n  background: linear-gradient(180deg, var(--track-top), var(--track-bottom));\n  box-shadow: inset 0 12px 24px var(--track-inset), inset 0 -2px 4px var(--track-light),\n    0 1.5px 0 var(--track-edge), 0 26px 46px -20px var(--track-shadow);\n  transform: scale(var(--pixel-switch-scale, .83));\n  outline-offset: 8px;\n  cursor: grab;\n  touch-action: pan-y;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.pixel-switch[data-dragging] { cursor: grabbing; }\n.pixel-switch:focus-visible { outline: 2px solid var(--focus); }\n.pixel-switch > * { pointer-events: none; }\n\n.pixel-knob {\n  position: absolute;\n  display: block;\n  border-radius: 69px;\n  background: linear-gradient(180deg, var(--knob-top), var(--knob-bottom));\n  box-shadow: inset 0 0 0 1px var(--knob-rim), inset 0 0 5px #ffffff2e,\n    0 16px 22px -9px var(--knob-shadow), 0 4px 9px var(--knob-shadow);\n}\n\n.pixel-effects {\n  position: absolute;\n  display: block;\n  width: 800px;\n  height: 552px;\n  left: -140px;\n  top: -140px;\n}\n\n.pixel-glass {\n  position: absolute;\n  inset: 0;\n  display: block;\n  width: 100%;\n  height: 100%;\n  pointer-events: none;\n}\n\n.pixel-scene[data-glass-renderer] .pixel-switch {\n  background: transparent;\n  box-shadow: none;\n}\n\n.pixel-scene[data-glass-renderer] .pixel-knob { visibility: hidden; }\n";
+var css = ".pixel-scene {\n  position: relative;\n  display: grid;\n  min-height: var(--motion-height, 540px);\n  place-items: center;\n  isolation: isolate;\n  overflow: hidden;\n  background: transparent;\n}\n\n.pixel-scene[data-preview] { background: #f4f4f4; }\n\n.pixel-switch {\n  position: relative;\n  width: 520px;\n  height: 272px;\n  padding: 0;\n  border: 0;\n  border-radius: 86px;\n  background: linear-gradient(180deg, var(--track-top), var(--track-bottom));\n  box-shadow: inset 0 12px 24px var(--track-inset), inset 0 -2px 4px var(--track-light),\n    0 1.5px 0 var(--track-edge), 0 26px 46px -20px var(--track-shadow);\n  transform: scale(var(--pixel-switch-scale, .83));\n  outline-offset: 8px;\n  cursor: grab;\n  touch-action: pan-y;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.pixel-switch[data-dragging] { cursor: grabbing; }\n.pixel-switch:focus-visible { outline: 2px solid var(--focus); }\n.pixel-switch > * { pointer-events: none; }\n\n.pixel-knob {\n  position: absolute;\n  display: block;\n  border-radius: 69px;\n  background: linear-gradient(180deg, var(--knob-top), var(--knob-bottom));\n  box-shadow: inset 0 0 0 1px var(--knob-rim), inset 0 0 5px #ffffff2e,\n    0 16px 22px -9px var(--knob-shadow), 0 4px 9px var(--knob-shadow);\n}\n\n.pixel-effects {\n  position: absolute;\n  display: block;\n  width: 800px;\n  height: 552px;\n  left: -140px;\n  top: -140px;\n}\n\n.pixel-glass {\n  position: absolute;\n  inset: 0;\n  display: block;\n  width: 100%;\n  height: 100%;\n  pointer-events: none;\n}\n\n.pixel-scene[data-glass-renderer] .pixel-switch {\n  background: transparent;\n  box-shadow: none;\n}\n\n.pixel-scene[data-glass-renderer] .pixel-knob { visibility: hidden; }\n";
 function mountPixelToggle(host, options = {}) {
   return createPixelToggle(host, options, css);
 }
