@@ -521,21 +521,21 @@ const Style = () => {
     width: 144px;
     height: 156px;
     background: url('/pets/deepseek-girl.webp') no-repeat 0 0 / 1152px 1716px;
-    animation: simple-pet-loop 1.75s steps(7, end) infinite;
+    animation: simple-pet-loop 1.75s steps(7, jump-none) infinite;
   }
 
   #theme-simple .simple-pet-sprite[data-looking] {
-    background-position: var(--look-x) var(--look-y);
+    background-position: var(--look-position);
     animation: none;
   }
 
   #theme-simple .simple-pet-sprite[data-action] {
     background-position-y: var(--action-y);
-    animation: simple-pet-action var(--action-duration) steps(var(--action-steps), end);
+    animation: simple-pet-action var(--action-duration) steps(var(--action-steps), jump-none) both;
   }
 
   @keyframes simple-pet-loop {
-    to { background-position-x: -1008px; }
+    to { background-position-x: -864px; }
   }
 
   @keyframes simple-pet-action {
