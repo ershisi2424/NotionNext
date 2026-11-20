@@ -76,6 +76,17 @@ const Style = () => {
       linear-gradient(145deg, #131e2e, #101724);
   }
 
+  #theme-simple .simple-footer {
+    border-top: 1px solid var(--glass-edge);
+    background: var(--glass-fill);
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    color: var(--glass-muted);
+  }
+
+  #theme-simple .simple-footer a {
+    color: var(--glass-accent);
+  }
+
   #theme-simple .simple-hero {
     padding: clamp(2.75rem, 8vw, 6rem) 1rem clamp(1.75rem, 5vw, 3.5rem);
   }
