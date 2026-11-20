@@ -3,6 +3,7 @@ import { getDataFromCache } from '@/lib/cache/cache_manager'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
+import { addSectionMatches } from '@/lib/db/notion/searchPostSections'
 import { getPageBlockCacheKey } from '@/lib/db/notion/getPostBlocks'
 
 const Index = props => {
@@ -29,6 +30,9 @@ export async function getStaticProps({ params: { keyword, page }, locale }) {
     page => page.type === 'Post' && page.status === 'Published'
   )
   props.posts = await filterByMemCache(allPosts, keyword)
+  if (siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG) === 'simple') {
+    props.posts = await addSectionMatches(allPosts, props.posts, keyword)
+  }
   props.postCount = props.posts.length
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', 12, props?.NOTION_CONFIG)
   // 处理分页

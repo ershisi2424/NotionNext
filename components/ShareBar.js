@@ -10,7 +10,7 @@ const ShareButtons = dynamic(() => import('@/components/ShareButtons'), {
  * @param {} param0
  * @returns
  */
-const ShareBar = ({ post }) => {
+const ShareBar = ({ post, radial }) => {
   if (
     !JSON.parse(siteConfig('POST_SHARE_BAR_ENABLE')) ||
     !post ||
@@ -18,6 +18,8 @@ const ShareBar = ({ post }) => {
   ) {
     return <></>
   }
+
+  if (radial) return <ShareButtons post={post} radial />
 
   return (
     <div className='m-1 overflow-x-auto scroll-hidden'>

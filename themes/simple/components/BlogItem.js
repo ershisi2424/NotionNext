@@ -8,6 +8,20 @@ import { formatDateFmt } from '@/lib/utils/formatDate'
 import SmartLink from '@/components/SmartLink'
 import CONFIG from '../config'
 
+function moveGlassReflection(event) {
+  if (event.pointerType !== 'mouse') return
+
+  const card = event.currentTarget
+  const { left, top } = card.getBoundingClientRect()
+  card.style.setProperty('--glass-pointer-x', `${event.clientX - left}px`)
+  card.style.setProperty('--glass-pointer-y', `${event.clientY - top}px`)
+  card.setAttribute('data-glass-reflecting', '')
+}
+
+function hideGlassReflection(event) {
+  event.currentTarget.removeAttribute('data-glass-reflecting')
+}
+
 export const BlogItem = props => {
   const { post } = props
   const { NOTION_CONFIG } = useGlobal()
@@ -18,18 +32,21 @@ export const BlogItem = props => {
   return (
     <div
       key={post.id}
-      className='h-42 my-6 pb-12 border-b dark:border-gray-800'>
+      className='simple-card'
+      onPointerMove={moveGlassReflection}
+      onPointerLeave={hideGlassReflection}
+      onPointerCancel={hideGlassReflection}>
       {/* 文章标题 */}
 
-      <div className='flex'>
+      <div className='simple-card-content'>
         <div className='article-cover h-full'>
           {/* 图片封面 */}
           {showPageCover && (
-            <div className='overflow-hidden mr-2 w-56 h-full'>
+            <div className='simple-card-cover'>
               <SmartLink href={post.href} passHref legacyBehavior>
                 <LazyImage
                   src={post?.pageCoverThumbnail}
-                  className='w-56 h-full object-cover object-center group-hover:scale-110 duration-500'
+                  className='w-full h-full object-cover object-center'
                 />
               </SmartLink>
             </div>
@@ -40,7 +57,7 @@ export const BlogItem = props => {
           <h2 className='mb-2'>
             <SmartLink
               href={post.href}
-              className='blog-item-title font-bold text-black text-2xl menu-link'>
+              className='blog-item-title'>
               {siteConfig('POST_TITLE_ICON') && (
                 <NotionIcon icon={post.pageIcon} />
               )}
@@ -49,7 +66,7 @@ export const BlogItem = props => {
           </h2>
 
           {/* 文章信息 */}
-          <header className='mb-5 text-md text-gray-700 dark:text-gray-300 flex-wrap flex leading-6'>
+          <header className='simple-card-meta flex-wrap flex leading-6'>
             <div className='space-x-2'>
               <span>
                 {' '}
@@ -95,7 +112,7 @@ export const BlogItem = props => {
             </div>
           </header>
 
-          <main className='text-gray-700 dark:text-gray-300 leading-normal mb-6'>
+          <main className='simple-card-summary'>
             {!showPreview && (
               <>
                 {post.summary}
@@ -112,10 +129,28 @@ export const BlogItem = props => {
         </article>
       </div>
 
+      {!!post.sectionMatches?.length && (
+        <ul className='mt-3 space-y-2 text-sm'>
+          {post.sectionMatches.map(section => (
+            <li key={section.id}>
+              <SmartLink
+                href={post.href + '#' + section.id}
+                className='simple-section-link inline-block font-medium underline underline-offset-4'>
+                <span aria-hidden='true' className='mr-1'>§</span>
+                {section.title}
+              </SmartLink>
+              {section.excerpt && (
+                <p className='simple-card-summary mt-0.5'>{section.excerpt}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className='block'>
         <SmartLink
           href={post.href}
-          className='inline-block rounded-sm text-blue-600 dark:text-blue-300  text-xs dark:border-gray-800 border hover:text-red-400 transition-all duration-200 hover:border-red-300 h-9 leading-8 px-5'>
+          className='simple-card-link'>
           点击访问{' '}
           <i className='fa-solid fa-angle-right align-middle'></i>
         </SmartLink>

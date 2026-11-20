@@ -1,3 +1,4 @@
+import RadialShareMenu from './RadialShareMenu'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import dynamic from 'next/dynamic'
@@ -66,7 +67,7 @@ const SHARE_BG_CLASS = {
  * @param {*} param0
  * @returns
  */
-const ShareButtons = ({ post }) => {
+const ShareButtons = ({ post, radial }) => {
   const router = useRouter()
   const [shareUrl, setShareUrl] = useState(siteConfig('LINK') + router.asPath)
   const title = post?.title || siteConfig('TITLE')
@@ -184,137 +185,150 @@ const ShareButtons = ({ post }) => {
     setShareUrl(window.location.href)
   }, [])
 
+  const buttons = services.map(singleService => {
+    switch (singleService) {
+      case 'facebook':
+      case 'messenger':
+      case 'line':
+      case 'reddit':
+      case 'email':
+      case 'twitter':
+      case 'telegram':
+      case 'whatsapp':
+      case 'linkedin':
+      case 'pinterest':
+      case 'vkshare':
+      case 'okshare':
+      case 'tumblr':
+      case 'livejournal':
+      case 'mailru':
+      case 'viber':
+      case 'workplace':
+      case 'weibo':
+      case 'pocket':
+      case 'instapaper':
+      case 'hatena':
+      case 'threads':
+        return renderCommonShareButton(singleService)
+      case 'qq':
+        return (
+          <button
+            aria-label={singleService}
+            key={singleService}
+            onClick={() =>
+              openShareWindow(
+                `http://connect.qq.com/widget/shareqq/index.html?url=${shareUrl}&sharesource=qzone&title=${title}&desc=${body}`
+              )
+            }
+            className={`${BASE_BUTTON_CLASS} bg-blue-600`}
+            title={singleService}>
+            <i className={`fab fa-qq ${ICON_CLASS}`} />
+          </button>
+        )
+      case 'wechat':
+        return (
+          <button
+            onMouseEnter={radial ? undefined : openPopover}
+            onMouseLeave={radial ? undefined : closePopover}
+            onClick={radial ? () => setQrCodeShow(visible => !visible) : undefined}
+            aria-expanded={radial ? qrCodeShow : undefined}
+            aria-label={singleService}
+            key={singleService}
+            className={`${BASE_BUTTON_CLASS} bg-green-600`}
+            title={singleService}>
+            <i className={`fab fa-weixin ${ICON_CLASS}`} />
+            {!radial && <div className='absolute'>
+              <div
+                id='pop'
+                className={
+                  (qrCodeShow ? 'opacity-100 ' : ' invisible opacity-0') +
+                  ' z-40 absolute bottom-10 -left-10 bg-white shadow-xl transition-all duration-200 text-center'
+                }>
+                <div className='p-2 mt-1 w-28 h-28'>
+                  {qrCodeShow && <QrCode value={shareUrl} />}
+                </div>
+                <span className='text-black font-semibold p-1 rounded-t-lg text-sm mx-auto mb-1'>
+                  {locale.COMMON.SCAN_QR_CODE}
+                </span>
+              </div>
+            </div>}
+          </button>
+        )
+      case 'link':
+        return (
+          <button
+            aria-label={singleService}
+            key={singleService}
+            onClick={copyUrl}
+            className={`${BASE_BUTTON_CLASS} bg-yellow-500`}
+            title={singleService}>
+            <i className={`fas fa-link ${ICON_CLASS}`} />
+          </button>
+        )
+      case 'csdn':
+        return (
+          <button
+            aria-label={singleService}
+            key={singleService}
+            onClick={() => openRedirectShare('https://link.csdn.net/?target=')}
+            className='cursor-pointer rounded-full mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500'
+            title={singleService}>
+            <div
+              className='w-8 h-8 rounded-full flex items-center justify-center'
+              style={{ backgroundColor: '#ff6a00' }}>
+              <Image
+                src='/svg/csdn.svg'
+                alt='CSDN'
+                width={28}
+                height={28}
+                className='w-5 h-5'
+                loading='lazy'
+                unoptimized
+              />
+            </div>
+          </button>
+        )
+      case 'juejin':
+        return (
+          <button
+            aria-label={singleService}
+            key={singleService}
+            onClick={() => openRedirectShare('https://link.juejin.cn/?target=')}
+            className='cursor-pointer rounded-full mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
+            title={singleService}>
+            <div
+              className='w-8 h-8 rounded-full flex items-center justify-center'
+              style={{ backgroundColor: '#5dade2' }}>
+              <Image
+                src='/svg/juejin.svg'
+                alt='掘金'
+                width={24}
+                height={24}
+                className='w-5 h-5'
+                loading='lazy'
+                unoptimized
+              />
+            </div>
+          </button>
+        )
+      default:
+        return null
+    }
+  })
+
+  if (!radial) return <>{buttons}</>
+
+  const accessory = qrCodeShow && (
+    <div className='mx-auto mb-3 w-fit rounded-xl bg-white p-3 text-center text-sm text-black'>
+      <div className='mx-auto h-28 w-28'><QrCode value={shareUrl} /></div>
+      <p className='mt-2'>{locale.COMMON.SCAN_QR_CODE}</p>
+    </div>
+  )
+
   return (
-    <>
-      {services.map(singleService => {
-        switch (singleService) {
-          case 'facebook':
-          case 'messenger':
-          case 'line':
-          case 'reddit':
-          case 'email':
-          case 'twitter':
-          case 'telegram':
-          case 'whatsapp':
-          case 'linkedin':
-          case 'pinterest':
-          case 'vkshare':
-          case 'okshare':
-          case 'tumblr':
-          case 'livejournal':
-          case 'mailru':
-          case 'viber':
-          case 'workplace':
-          case 'weibo':
-          case 'pocket':
-          case 'instapaper':
-          case 'hatena':
-          case 'threads':
-            return renderCommonShareButton(singleService)
-          case 'qq':
-            return (
-              <button
-                aria-label={singleService}
-                key={singleService}
-                onClick={() =>
-                  openShareWindow(
-                    `http://connect.qq.com/widget/shareqq/index.html?url=${shareUrl}&sharesource=qzone&title=${title}&desc=${body}`
-                  )
-                }
-                className={`${BASE_BUTTON_CLASS} bg-blue-600`}
-                title={singleService}>
-                <i className={`fab fa-qq ${ICON_CLASS}`} />
-              </button>
-            )
-          case 'wechat':
-            return (
-              <button
-                onMouseEnter={openPopover}
-                onMouseLeave={closePopover}
-                aria-label={singleService}
-                key={singleService}
-                className={`${BASE_BUTTON_CLASS} bg-green-600`}
-                title={singleService}>
-                <i className={`fab fa-weixin ${ICON_CLASS}`} />
-                <div className='absolute'>
-                  <div
-                    id='pop'
-                    className={
-                      (qrCodeShow ? 'opacity-100 ' : ' invisible opacity-0') +
-                      ' z-40 absolute bottom-10 -left-10 bg-white shadow-xl transition-all duration-200 text-center'
-                    }>
-                    <div className='p-2 mt-1 w-28 h-28'>
-                      {qrCodeShow && <QrCode value={shareUrl} />}
-                    </div>
-                    <span className='text-black font-semibold p-1 rounded-t-lg text-sm mx-auto mb-1'>
-                      {locale.COMMON.SCAN_QR_CODE}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            )
-          case 'link':
-            return (
-              <button
-                aria-label={singleService}
-                key={singleService}
-                onClick={copyUrl}
-                className={`${BASE_BUTTON_CLASS} bg-yellow-500`}
-                title={singleService}>
-                <i className={`fas fa-link ${ICON_CLASS}`} />
-              </button>
-            )
-          case 'csdn':
-            return (
-              <button
-                aria-label={singleService}
-                key={singleService}
-                onClick={() => openRedirectShare('https://link.csdn.net/?target=')}
-                className='cursor-pointer rounded-full mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500'
-                title={singleService}>
-                <div
-                  className='w-8 h-8 rounded-full flex items-center justify-center'
-                  style={{ backgroundColor: '#ff6a00' }}>
-                  <Image
-                    src='/svg/csdn.svg'
-                    alt='CSDN'
-                    width={28}
-                    height={28}
-                    className='w-5 h-5'
-                    loading='lazy'
-                    unoptimized
-                  />
-                </div>
-              </button>
-            )
-          case 'juejin':
-            return (
-              <button
-                aria-label={singleService}
-                key={singleService}
-                onClick={() => openRedirectShare('https://link.juejin.cn/?target=')}
-                className='cursor-pointer rounded-full mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
-                title={singleService}>
-                <div
-                  className='w-8 h-8 rounded-full flex items-center justify-center'
-                  style={{ backgroundColor: '#5dade2' }}>
-                  <Image
-                    src='/svg/juejin.svg'
-                    alt='掘金'
-                    width={24}
-                    height={24}
-                    className='w-5 h-5'
-                    loading='lazy'
-                    unoptimized
-                  />
-                </div>
-              </button>
-            )
-          default:
-            return <></>
-        }
-      })}
-    </>
+    <RadialShareMenu accessory={accessory} onClose={closePopover}>
+      {buttons}
+    </RadialShareMenu>
   )
 }
 

@@ -80,18 +80,20 @@ export const MenuList = ({ customNav, customMenu }) => {
       <div
         id='nav-menu-mobile'
         className='flex md:hidden my-auto justify-start'>
-        <div
+        <button
+          type='button'
+          aria-expanded={isOpen}
           onClick={toggleIsOpen}
           className='cursor-pointer hover:text-red-400 transition-all duration-200'>
           <i
             className={`${isOpen && 'rotate-90'} transition-all duration-200 fa fa-bars mr-3`}
           />
           <span>{!isOpen ? 'MENU' : 'CLOSE'}</span>
-        </div>
+        </button>
 
         <Collapse
           collapseRef={collapseRef}
-          className='absolute w-full top-12 left-0'
+          className='simple-mobile-menu absolute w-full left-0'
           isOpen={isOpen}>
           <div
             id='menu-wrap'

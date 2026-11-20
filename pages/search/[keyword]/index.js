@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
 import { getPageContentText } from '@/lib/db/notion/getPageContentText'
+import { addSectionMatches } from '@/lib/db/notion/searchPostSections'
 import { getPageBlockCacheKey } from '@/lib/db/notion/getPostBlocks'
 
 const Index = props => {
@@ -26,6 +27,9 @@ export async function getStaticProps({ params: { keyword }, locale }) {
     page => page.type === 'Post' && page.status === 'Published'
   )
   props.posts = await filterByMemCache(allPosts, keyword)
+  if (siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG) === 'simple') {
+    props.posts = await addSectionMatches(allPosts, props.posts, keyword)
+  }
   props.postCount = props.posts.length
   const POST_LIST_STYLE = siteConfig(
     'POST_LIST_STYLE',

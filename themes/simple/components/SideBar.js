@@ -1,5 +1,5 @@
 import { AdSlot } from '@/components/GoogleAdsense'
-import Live2D from '@/components/Live2D'
+import DeepSeekPet from './DeepSeekPet'
 import Announcement from './Announcement'
 import Catalog from './Catalog'
 import WWAds from '@/components/WWAds'
@@ -15,7 +15,7 @@ export default function SideBar (props) {
 
             <Catalog {...props} />
 
-            <Live2D />
+            <DeepSeekPet />
 
             <Announcement post={notice} />
 

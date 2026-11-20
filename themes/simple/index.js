@@ -10,6 +10,7 @@ import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
 import { createContext, useContext, useEffect, useRef } from 'react'
 import BlogPostBar from './components/BlogPostBar'
+import FrostBackground from './components/FrostBackground'
 import CONFIG from './config'
 import { Style } from './style'
 
@@ -74,8 +75,10 @@ const LayoutBase = props => {
     <ThemeGlobalSimple.Provider value={{ searchModal }}>
       <div
         id='theme-simple'
+        data-frost-pointer-surface
         className={`${siteConfig('FONT_STYLE')} min-h-screen flex flex-col dark:text-gray-300  bg-white dark:bg-black scroll-smooth`}>
         <Style />
+        <FrostBackground />
 
         {siteConfig('SIMPLE_TOP_BAR', null, CONFIG) && <TopBar {...props} />}
 
@@ -93,16 +96,16 @@ const LayoutBase = props => {
               ? 'flex-row-reverse'
               : '') + ' w-full flex-1 flex items-start max-w-9/10 mx-auto pt-12'
           }>
-          <div id='container-inner ' className='w-full flex-grow min-h-fit'>
+          <div id='container-inner' className='w-full flex-grow min-h-fit'>
             <Transition
               show={!onLoading}
               appear={true}
-              enter='transition ease-in-out duration-700 transform order-first'
-              enterFrom='opacity-0 translate-y-16'
+              enter='transition ease-out duration-300 transform motion-reduce:transition-none'
+              enterFrom='opacity-0 translate-y-2 motion-reduce:translate-y-0'
               enterTo='opacity-100'
-              leave='transition ease-in-out duration-300 transform'
+              leave='transition ease-in duration-150 transform motion-reduce:transition-none'
               leaveFrom='opacity-100 translate-y-0'
-              leaveTo='opacity-0 -translate-y-16'
+              leaveTo='opacity-0 -translate-y-2 motion-reduce:translate-y-0'
               unmount={false}>
               {slotTop}
 
@@ -114,7 +117,7 @@ const LayoutBase = props => {
           {fullWidth ? null : (
             <div
               id='right-sidebar'
-              className='hidden xl:block flex-none sticky top-8 w-96 border-l dark:border-gray-800 pl-12 border-gray-100'>
+              className='hidden xl:block flex-none sticky top-24 w-80 border-l dark:border-gray-800 pl-8 border-gray-100'>
               <SideBar {...props} />
             </div>
           )}
@@ -142,6 +145,7 @@ const LayoutBase = props => {
 const LayoutIndex = props => {
   return <LayoutPostList {...props} />
 }
+
 /**
  * 博客列表
  * @param {*} props
@@ -239,7 +243,7 @@ const LayoutSlug = props => {
           </div>
 
           {/* 分享 */}
-          <ShareBar post={post} />
+          <ShareBar post={post} radial />
 
           {/* 广告嵌入 */}
           <AdSlot type={'in-article'} />
