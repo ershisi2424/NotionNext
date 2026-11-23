@@ -64,6 +64,11 @@ const IndexLayoutLoading = () => (
   </div>
 )
 
+const SimpleBaseLayout = dynamic(
+  () => import('@/themes/simple').then(module => module.LayoutBase),
+  { ssr: true }
+)
+
 const SimpleIndexLayout = dynamic(
   () => import('@/themes/simple').then(module => module.LayoutIndex),
   { ssr: true }
@@ -196,6 +201,8 @@ const getCurrentTheme = (router, fallbackTheme) => {
  */
 export const getBaseLayoutByTheme = theme => {
   const normalizedTheme = normalizeThemeName(theme)
+  if (normalizedTheme === 'simple') return SimpleBaseLayout
+
   if (baseLayoutCache.has(normalizedTheme)) {
     return baseLayoutCache.get(normalizedTheme)
   }
