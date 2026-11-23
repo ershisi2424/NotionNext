@@ -95,7 +95,7 @@ const LayoutBase = props => {
           <div id='container-inner' className='w-full flex-grow min-h-fit'>
             <Transition
               show={!onLoading}
-              appear={true}
+              appear={false}
               enter='transition ease-out duration-300 transform motion-reduce:transition-none'
               enterFrom='opacity-0 translate-y-2 motion-reduce:translate-y-0'
               enterTo='opacity-100'
