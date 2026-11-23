@@ -10,6 +10,9 @@ import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
 import { createContext, useContext, useEffect, useRef } from 'react'
 import BlogPostBar from './components/BlogPostBar'
+import BlogListPage from './components/BlogListPage'
+import BlogListScroll from './components/BlogListScroll'
+import Header from './components/Header'
 import FrostBackground from './components/FrostBackground'
 import CONFIG from './config'
 import { Style } from './style'
@@ -20,9 +23,6 @@ const AlgoliaSearchModal = dynamic(
 )
 
 // 主题组件
-const BlogListScroll = dynamic(() => import('./components/BlogListScroll'), {
-  ssr: false
-})
 const BlogArchiveItem = dynamic(() => import('./components/BlogArchiveItem'), {
   ssr: false
 })
@@ -38,7 +38,6 @@ const ArticleAround = dynamic(() => import('./components/ArticleAround'), {
 })
 const ShareBar = dynamic(() => import('@/components/ShareBar'), { ssr: false })
 const TopBar = dynamic(() => import('./components/TopBar'), { ssr: false })
-const Header = dynamic(() => import('./components/Header'), { ssr: false })
 const NavBar = dynamic(() => import('./components/NavBar'), { ssr: false })
 const SideBar = dynamic(() => import('./components/SideBar'), { ssr: false })
 const JumpToTopButton = dynamic(() => import('./components/JumpToTopButton'), {
@@ -49,9 +48,6 @@ const SearchInput = dynamic(() => import('./components/SearchInput'), {
   ssr: false
 })
 const WWAds = dynamic(() => import('@/components/WWAds'), { ssr: false })
-const BlogListPage = dynamic(() => import('./components/BlogListPage'), {
-  ssr: false
-})
 const RecommendPosts = dynamic(() => import('./components/RecommendPosts'), {
   ssr: false
 })

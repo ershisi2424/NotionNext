@@ -1,6 +1,7 @@
 import LazyImage from '@/components/LazyImage'
 import { siteConfig } from '@/lib/config'
 import SmartLink from '@/components/SmartLink'
+import { useRouter } from 'next/router'
 import CONFIG from '../config'
 import SocialButton from './SocialButton'
 
@@ -10,6 +11,8 @@ import SocialButton from './SocialButton'
  */
 export default function Header(props) {
   const { siteInfo } = props
+  const isHome = useRouter().pathname === '/'
+  const BrandTitle = isHome ? 'h1' : 'div'
 
   return (
     <header className='simple-hero text-center relative'>
@@ -29,9 +32,9 @@ export default function Header(props) {
             </div>
 
             <div className='flex-col flex justify-center'>
-              <div className='simple-brand-title'>
-                {siteConfig('AUTHOR')}
-              </div>
+              <BrandTitle className='simple-brand-title'>
+                {isHome ? siteInfo?.title || siteConfig('TITLE') : siteConfig('AUTHOR')}
+              </BrandTitle>
               <div
                 className='simple-brand-subtitle'
                 dangerouslySetInnerHTML={{

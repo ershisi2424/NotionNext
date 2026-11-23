@@ -64,6 +64,11 @@ const IndexLayoutLoading = () => (
   </div>
 )
 
+const SimpleIndexLayout = dynamic(
+  () => import('@/themes/simple').then(module => module.LayoutIndex),
+  { ssr: true }
+)
+
 const getLayoutLoading = layoutName => {
   if (layoutName === 'LayoutIndex') {
     return IndexLayoutLoading
@@ -227,6 +232,11 @@ export const useLayoutByTheme = ({ layoutName, theme }) => {
   if (layoutByThemeCache.has(cacheKey)) {
     scheduleFixThemeDOM(themeQuery === BLOG.THEME ? 80 : 240)
     return layoutByThemeCache.get(cacheKey)
+  }
+
+  if (themeQuery === 'simple' && layoutName === 'LayoutIndex') {
+    layoutByThemeCache.set(cacheKey, SimpleIndexLayout)
+    return SimpleIndexLayout
   }
 
   const loadLayout = () =>
