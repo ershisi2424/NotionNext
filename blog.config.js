@@ -19,6 +19,8 @@ const BLOG = {
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '二十四', // 您的昵称 例如 tangly1024
   BIO: process.env.NEXT_PUBLIC_BIO || '一个普通的打工人', // 作者简介
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://www.242424.help', // 网站地址
+  SEO_SITE_ALTERNATE_NAME: '二十四直播调试',
+  SEO_HOME_TITLE: '二十四调试 | OBS 直播排障、相机参数与 LUT 工具',
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '二十四/支援', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXX

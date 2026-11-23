@@ -87,6 +87,12 @@ const SEO = props => {
     NOTION_CONFIG
   )
 
+  const bingVerification = siteConfig('SEO_BING_SITE_VERIFICATION', null, NOTION_CONFIG)
+  const yandexVerification = siteConfig('SEO_YANDEX_SITE_VERIFICATION', null, NOTION_CONFIG)
+  const alternateName = router.route === '/'
+    ? siteConfig('SEO_SITE_ALTERNATE_NAME', null, NOTION_CONFIG)
+    : null
+
   const BLOG_FAVICON = siteConfig('BLOG_FAVICON', null, NOTION_CONFIG)
 
   const COMMENT_WEBMENTION_ENABLE = siteConfig(
@@ -146,6 +152,9 @@ const SEO = props => {
           content={SEO_BAIDU_SITE_VERIFICATION}
         />
       )}
+
+      {bingVerification && <meta name='msvalidate.01' content={bingVerification} />}
+      {yandexVerification && <meta name='yandex-verification' content={yandexVerification} />}
 
       {/* 基础SEO元数据 */}
       <link rel='canonical' href={url} />
@@ -228,7 +237,7 @@ const SEO = props => {
         type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
-            generateStructuredData(meta, siteInfo, url, image, AUTHOR, LINK)
+            generateStructuredData(meta, siteInfo, url, image, AUTHOR, LINK, alternateName)
           )
         }}
       />
@@ -265,12 +274,14 @@ export const generateStructuredData = (
   url,
   image,
   author,
-  siteUrl
+  siteUrl,
+  alternateName
 ) => {
   const baseData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: siteInfo?.title,
+    ...(alternateName && { alternateName }),
     description: siteInfo?.description,
     url: siteUrl,
     author: {
@@ -349,14 +360,15 @@ const getIsoTime = value => {
  * @param {*} router
  */
 const getSEOMeta = (props, router, locale) => {
-  const { post, siteInfo, tag, category, page } = props
+  const { post, siteInfo, tag, category, page, NOTION_CONFIG } = props
   const keyword = router?.query?.s
 
   const TITLE = siteConfig('TITLE')
   switch (router.route) {
     case '/':
       return {
-        title: `${siteInfo?.title} | ${siteInfo?.description}`,
+        title: siteConfig('SEO_HOME_TITLE', null, NOTION_CONFIG) ||
+          `${siteInfo?.title} | ${siteInfo?.description}`,
         description: `${siteInfo?.description}`,
         image: `${siteInfo?.pageCover}`,
         slug: '',
