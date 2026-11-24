@@ -37,7 +37,8 @@ def version():
 
 
 def rewrite(content, release):
-    text = content.decode('utf-8')
+    # Avoid Vercel's reserved Next Image endpoint, which may re-encode snapshots.
+    text = re.sub(r'(?<![\w./-])/_next/image\b', '/__showcase-image', content.decode('utf-8'))
     return ASSET_PATH.sub(lambda match: PREFIX + release + match.group(), text).encode('utf-8')
 
 
@@ -61,13 +62,13 @@ def prepare_config():
     config_path = ROOT.parent / 'vercel.json'
     config = json.loads(config_path.read_text(encoding='utf-8'))
     # Only replace our generated rules; preserve all existing page and blog routing.
-    rules = [rule for rule in config['rewrites'] if not rule.get('source', '').startswith(PREFIX) and not (rule.get('source') == '/_next/image' and rule.get('has'))]
+    rules = [rule for rule in config['rewrites'] if not rule.get('source', '').startswith(PREFIX) and rule.get('source') != '/__showcase-image' and not (rule.get('source') == '/_next/image' and rule.get('has'))]
     image_rules = [{
-        'source': '/_next/image',
+        'source': '/__showcase-image',
         'has': [{'type': 'query', 'key': k, 'value': re.escape(v)} for k, v in zip(('url', 'w', 'q'), key)],
         'destination': f'/blog/__showcase-assets/v/{release}/images/{name}',
     } for key, name in sorted(images.items())]
-    config['rewrites'] = [{'source': PREFIX + ':version/:path*', 'destination': '/blog/__showcase-assets/v/:version/:path*'}, *image_rules, *rules]
+    config['rewrites'] = [{'source': PREFIX + ':version/:path*', 'destination': '/blog/__showcase-assets/v/:version/:path*'}, *image_rules, {'source': '/__showcase-image', 'destination': '/api/showcase?__showcase_path=/_next/image'}, *rules]
     config['headers'] = [rule for rule in config.get('headers', []) if not rule.get('source', '').startswith(PREFIX)] + [{
         'source': PREFIX + ':version/:path*',
         'headers': [{'key': 'Cache-Control', 'value': 'public, max-age=31536000, immutable'}],

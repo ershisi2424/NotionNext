@@ -11,7 +11,7 @@
 ## 本轮资源与扫描优化
 
 - 资源按内容计算版本，页面及版本内脚本/CSS使用 `/__showcase/v/<version>/...`。仅此路径设置一年 immutable 缓存，原路径保持默认重新验证；博客及 Notion API 不应用此规则。
-- 328 组已缓存图片的 url/w/q 参数生成精确 Vercel 静态路由，图片原始响应字节逐一核对；未匹配请求仍走原函数回退。
+- 328 组已缓存图片的 url/w/q 参数生成精确 Vercel 静态路由，页面使用 `/__showcase-image` 避开平台内置 Next Image 的重新编码，图片原始响应字节逐一核对；未匹配请求仍走原函数回退。
 - 保留词典提前下载与 load 后处理 DOM 的顺序，版本内脚本与 HTML preload 指向同一版本词典。
 - MutationObserver 只扫描新增节点或变化的文本，合并父子节点；按首页/菜单、摄影、声卡、直播案例、联系方式和电脑窗口区域触发内容同步。
 - 修改互动资源后运行 `python interactive-showcase/asset_pipeline.py`，提交生成的 `asset-manifest.json` 与根 `vercel.json`。构建校验内容版本，忘记更新时构建会失败，避免发布陈旧的 immutable 内容。随后运行 `python interactive-showcase/build_vercel.py --output public/__showcase-assets` 和 `python -m unittest discover -s interactive-showcase -p test_asset_pipeline.py -v`。

@@ -20,7 +20,7 @@ class AssetPipelineTests(unittest.TestCase):
         result = rewrite(source, 'test')
         self.assertIn(b'"/__showcase/v/test/models/mac.glb"', result)
         self.assertIn(b'"https://other.test/models/mac.glb"', result)
-        self.assertIn(b'"/_next/image?url=x"', result)
+        self.assertIn(b'"/__showcase-image?url=x"', result)
         self.assertIn(b'"/__showcase/v/test/_next/"', result)
         self.assertIn(b'"/blog/article/guide"', result)
         self.assertEqual(result, rewrite(result, 'test'))
