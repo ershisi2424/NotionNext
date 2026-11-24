@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'interactive-showca
 from local_zh import ChineseMirror
 import json
 from asset_pipeline import MANIFEST, rewrite
+from seo_metadata import crawl_response
 
 ASSET_VERSION = json.loads(MANIFEST.read_text(encoding='utf-8'))['version']
 
@@ -22,4 +23,15 @@ class handler(ChineseMirror):
         original = next((value for key, value in pairs if key == '__showcase_path'), route.path)
         query = urlencode([(key, value) for key, value in pairs if key not in ('__showcase_path', 'path') and not key.startswith('_vercel_')])
         self.path = original + ('?' + query if query else '')
+        metadata = crawl_response(original)
+        if metadata:
+            content_type, body = metadata
+            self.send_response(200)
+            self.send_header('Content-Type', content_type)
+            self.send_header('Content-Length', str(len(body)))
+            self.send_header('Cache-Control', 'public, max-age=300, s-maxage=300')
+            self.end_headers()
+            if send_body:
+                self.wfile.write(body)
+            return
         return super().serve(send_body)

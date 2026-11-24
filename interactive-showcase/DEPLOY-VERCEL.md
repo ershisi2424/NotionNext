@@ -9,3 +9,15 @@
 Notion 内容数据库 ID：`3bbac63423f9826c83b801ba5b99a1df`。配置中心页面 ID：`6e5ac63423f98251b5dd810615021285`。凭据仍仅配置在 Vercel。
 
 发布前验证：首页、/explore、/blog、文章页、/blog/_next/ 静态资源、图片和 API。缓存刷新说明参见 ../docs/notion-content-refresh.md。
+
+## 搜索引擎抓取入口
+
+Google Search Console 提交 `https://www.242424.help/sitemap.xml`。
+根目录地图是索引，包含 `/sitemap-public.xml`（作品集和独立游戏页面）与
+`/blog/sitemap.xml`（NotionNext 动态内容）。根目录 `/robots.txt` 声明该索引。
+前三个根目录入口由 `api/showcase.py` 独立提供，不依赖 Notion 请求。
+`vercel.json` 必须保留它们的根目录重写规则；Next.js 的 `/blog` basePath
+不会自动把博客地图或 robots.txt 暴露在域名根目录。
+
+上线后验证 GET 和 HEAD 返回 200、XML 可解析、两个子地图可访问，再重新提交。
+Google 接受提交不代表已经完成抓取或收录，报告需要等待其重新处理。

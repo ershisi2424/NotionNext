@@ -21,6 +21,18 @@
   },
   "rewrites": [
     {
+      "source": "/robots.txt",
+      "destination": "/api/showcase?__showcase_path=/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/showcase?__showcase_path=/sitemap.xml"
+    },
+    {
+      "source": "/sitemap-public.xml",
+      "destination": "/api/showcase?__showcase_path=/sitemap-public.xml"
+    },
+    {
       "source": "/__showcase/v/:version/:path*",
       "destination": "/blog/__showcase-assets/v/:version/:path*"
     },
@@ -7061,5 +7073,22 @@
       "destination": "/api/showcase?__showcase_path=/manifest.webmanifest"
     }
   ],
-  "buildCommand": "python interactive-showcase/build_vercel.py --output public/__showcase-assets && yarn build"
+  "buildCommand": "python interactive-showcase/build_vercel.py --output public/__showcase-assets && yarn build",
+  "redirects": [
+    {
+      "source": "/sitemap",
+      "destination": "/sitemap.xml",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap-public",
+      "destination": "/sitemap-public.xml",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap-public.XML",
+      "destination": "/sitemap-public.xml",
+      "permanent": true
+    }
+  ]
 }
