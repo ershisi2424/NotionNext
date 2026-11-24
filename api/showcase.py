@@ -13,6 +13,6 @@ class handler(ChineseMirror):
         route = urlsplit(self.path)
         pairs = parse_qsl(route.query, keep_blank_values=True)
         original = next((value for key, value in pairs if key == '__showcase_path'), route.path)
-        query = urlencode([(key, value) for key, value in pairs if key not in ('__showcase_path', 'path')])
+        query = urlencode([(key, value) for key, value in pairs if key not in ('__showcase_path', 'path') and not key.startswith('_vercel_')])
         self.path = original + ('?' + query if query else '')
         return super().serve(send_body)
