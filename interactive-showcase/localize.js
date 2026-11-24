@@ -2,18 +2,19 @@
 (async function localize() {
   'use strict';
 
-  // The captured React header can retain a page-local scroll callback. Use a
-  // document navigation for the brand so case pages always return home.
+  // Captured React header callbacks may scroll the current case document or
+  // reuse stale router state. Preserve the original home-section destinations
+  // with native anchor navigation, both on the homepage and from case pages.
   document.addEventListener('click', (event) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const link = event.target instanceof Element && event.target.closest('header a[href]');
-    if (!link || link.closest('nav') || link.target || link.hasAttribute('download')) return;
+    if (!link || link.target || link.hasAttribute('download')) return;
     const target = new URL(link.href, location.href);
-    if (target.origin !== location.origin || target.pathname !== '/' || target.hash !== '#top') return;
-    if (location.pathname === '/') return;
+    if (target.origin !== location.origin || target.pathname !== '/' ||
+        !['#top', '#work', '#about', '#playground', '#contact'].includes(target.hash)) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    location.assign('/#top');
+    location.assign('/' + target.hash);
   }, true);
 
   // Download alongside the page; DOM translation still waits for hydration.
