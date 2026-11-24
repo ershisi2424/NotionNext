@@ -2,6 +2,14 @@
 (async function localize() {
   'use strict';
 
+  // Download alongside the page; DOM translation still waits for hydration.
+  const dictionaryResponse = fetch('/__zh/messages.tsv').then(async response => {
+    if (!response.ok) throw new Error('无法读取简体中文词典');
+    return response.text();
+  });
+  // Attach a handler immediately so a slow page does not report an unhandled rejection.
+  dictionaryResponse.catch(() => {});
+
   let robotAudio = null;
   function isRobotAudioMuted() {
     if (typeof window.__deskGetAudioMuted === 'function') return window.__deskGetAudioMuted();
@@ -87,10 +95,9 @@
     await new Promise((resolve) => window.addEventListener('load', resolve, { once: true }));
   }
 
-  const response = await fetch('/__zh/messages.tsv');
-  if (!response.ok) throw new Error('无法读取简体中文词典');
+  const dictionaryText = await dictionaryResponse;
   const dictionary = new Map();
-  for (const line of (await response.text()).replace(/^\uFEFF/, '').split(/\r?\n/)) {
+  for (const line of dictionaryText.replace(/^\uFEFF/, '').split(/\r?\n/)) {
     if (!line || line.startsWith('#')) continue;
     const separator = line.indexOf('\t');
     if (separator > 0) dictionary.set(line.slice(0, separator).replace(/\\n/g, '\n').trim().replace(/\s+/g, ' '), line.slice(separator + 1).replace(/\\n/g, '\n'));

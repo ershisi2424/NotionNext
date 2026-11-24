@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 from mirror import Mirror, ThreadingHTTPServer
 
 ROOT = Path(__file__).resolve().parent
-LOCALIZATION = b'<link rel="stylesheet" href="/__zh/localize.css"><script defer src="/__zh/localize.js"></script>'
+LOCALIZATION = b'<link rel="preload" href="/__zh/messages.tsv" as="fetch" crossorigin="anonymous"><link rel="stylesheet" href="/__zh/localize.css"><script defer src="/__zh/localize.js"></script>'
 # 请求地址与可直接修改的本地文件一一对应，不允许按任意路径读文件。
 ASSETS = {
     "/__zh/localize.css": ("localize.css", "text/css; charset=utf-8"),
