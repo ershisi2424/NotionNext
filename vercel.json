@@ -12,67 +12,67 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/"
     },
     {
       "source": "/explore",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/explore"
     },
     {
       "source": "/works/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/works/:path*"
     },
     {
       "source": "/tank",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/tank"
     },
     {
       "source": "/space-invader",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/space-invader"
     },
     {
       "source": "/tetris",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/tetris"
     },
     {
       "source": "/pac-man",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/pac-man"
     },
     {
       "source": "/snake",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/snake"
     },
     {
       "source": "/_next/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/_next/:path*"
     },
     {
       "source": "/__zh/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/__zh/:path*"
     },
     {
       "source": "/models/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/models/:path*"
     },
     {
       "source": "/textures/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/textures/:path*"
     },
     {
       "source": "/sounds/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/sounds/:path*"
     },
     {
       "source": "/stills/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/stills/:path*"
     },
     {
       "source": "/projects/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/projects/:path*"
     },
     {
       "source": "/logos/:path*",
-      "destination": "/api/showcase"
+      "destination": "/api/showcase?__showcase_path=/logos/:path*"
     },
     {
       "source": "/api/notion-comments",
