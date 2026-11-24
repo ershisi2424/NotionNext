@@ -81,6 +81,74 @@
     {
       "source": "/api/subscribe",
       "destination": "/blog/api/subscribe"
+    },
+    {
+      "source": "/draco/:path*",
+      "destination": "/api/showcase?__showcase_path=/draco/:path*"
+    },
+    {
+      "source": "/icons/:path*",
+      "destination": "/api/showcase?__showcase_path=/icons/:path*"
+    },
+    {
+      "source": "/tech-icons/:path*",
+      "destination": "/api/showcase?__showcase_path=/tech-icons/:path*"
+    },
+    {
+      "source": "/about/:path*",
+      "destination": "/api/showcase?__showcase_path=/about/:path*"
+    },
+    {
+      "source": "/testimonials/:path*",
+      "destination": "/api/showcase?__showcase_path=/testimonials/:path*"
+    },
+    {
+      "source": "/gifs/:path*",
+      "destination": "/api/showcase?__showcase_path=/gifs/:path*"
+    },
+    {
+      "source": "/tank/:path*",
+      "destination": "/api/showcase?__showcase_path=/tank/:path*"
+    },
+    {
+      "source": "/space-invader/:path*",
+      "destination": "/api/showcase?__showcase_path=/space-invader/:path*"
+    },
+    {
+      "source": "/pacman/:path*",
+      "destination": "/api/showcase?__showcase_path=/pacman/:path*"
+    },
+    {
+      "source": "/tetris/:path*",
+      "destination": "/api/showcase?__showcase_path=/tetris/:path*"
+    },
+    {
+      "source": "/snake/:path*",
+      "destination": "/api/showcase?__showcase_path=/snake/:path*"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/api/showcase?__showcase_path=/favicon.ico"
+    },
+    {
+      "source": "/apple-icon.png",
+      "destination": "/api/showcase?__showcase_path=/apple-icon.png"
+    },
+    {
+      "source": "/icon.svg",
+      "destination": "/api/showcase?__showcase_path=/icon.svg"
+    },
+    {
+      "source": "/icon-192.png",
+      "destination": "/api/showcase?__showcase_path=/icon-192.png"
+    },
+    {
+      "source": "/icon-512.png",
+      "destination": "/api/showcase?__showcase_path=/icon-512.png"
+    },
+    {
+      "source": "/manifest.webmanifest",
+      "destination": "/api/showcase?__showcase_path=/manifest.webmanifest"
     }
   ]
 }
