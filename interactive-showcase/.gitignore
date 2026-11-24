@@ -1,0 +1,6 @@
+__pycache__/
+*.log
+public/
+.vercel/
+.env*
+!.env.example

@@ -1,5 +1,5 @@
 import BLOG from '@/blog.config'
-import { cleanCache } from '@/lib/cache/local_file_cache'
+import { clearDataCache } from '@/lib/cache/cache_manager'
 
 /**
  * On-Demand Revalidation API
@@ -43,11 +43,16 @@ export default async function handler(req, res) {
   }
 
   const { path, paths, all } = req.body || {}
+  const requestedPaths = paths ?? (path ? [path] : ['/'])
+  if (!Array.isArray(requestedPaths) || requestedPaths.length === 0 || requestedPaths.length > 100 ||
+      requestedPaths.some(p => typeof p !== 'string' || !p.startsWith('/') || p.startsWith('//') || /[?#\\]/.test(p))) {
+    return res.status(400).json({ ok: false, message: 'Provide 1–100 local paths beginning with /, without query strings or fragments.' })
+  }
 
   try {
+    await clearDataCache()
     // 全站刷新：清除本地缓存 + revalidate 首页
     if (all) {
-      cleanCache()
       const results = []
       try {
         await res.revalidate('/')
@@ -55,15 +60,15 @@ export default async function handler(req, res) {
       } catch (e) {
         results.push({ path: '/', revalidated: false, error: e.message })
       }
-      return res.status(200).json({
-        ok: true,
-        message: 'Full site cache cleared. Homepage revalidated. Other pages will refresh on next visit.',
+      return res.status(results.every(r => r.revalidated) ? 200 : 500).json({
+        ok: results.every(r => r.revalidated),
+        message: 'All data cache layers cleared. Homepage revalidation attempted. Other generated pages follow their ISR interval; pass paths for immediate refresh.',
         results
       })
     }
 
     // 批量刷新
-    const targetPaths = paths || (path ? [path] : ['/'])
+    const targetPaths = [...new Set(requestedPaths.map(normalizePath))]
     const results = []
 
     for (const p of targetPaths) {
@@ -76,8 +81,8 @@ export default async function handler(req, res) {
       }
     }
 
-    return res.status(200).json({
-      ok: true,
+    return res.status(results.every(r => r.revalidated) ? 200 : 500).json({
+      ok: results.every(r => r.revalidated),
       message: `Revalidated ${results.filter(r => r.revalidated).length}/${results.length} paths`,
       results
     })

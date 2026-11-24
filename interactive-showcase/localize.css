@@ -1,0 +1,303 @@
+/* 中文说明面板独立于原游戏画布，折叠后只占右上角一行。 */
+[data-local-zh="guide"] {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 1000;
+  max-width: min(330px, calc(100% - 24px));
+  padding: .45rem .7rem;
+  color: #f4f4f5;
+  background: #18181bee;
+  border: 1px solid #68687a;
+  border-radius: 5px;
+  font: 14px/1.55 system-ui, "Microsoft YaHei", sans-serif;
+}
+[data-local-zh="guide"] summary { cursor: pointer; }
+[data-local-zh="guide"] a { color: #a5d8ff; text-decoration: underline; }
+
+/* 电脑桌面隐藏简历图标，兼容翻译前后的标题。只匹配桌面直属图标。 */
+[data-desktop-author-credit] {
+  display: none !important;
+}
+
+[data-fs-drop="desktop"] > div:has(> button > span:is([title="Resume"], [title="简历"])) {
+  display: none !important;
+}
+
+/* 隐藏下载窗口中的名片、作品集和简历文件，兼容中文标题。 */
+[data-fs-drop="window:downloads"] > div:has(> button > span:is([title="BusinessCard.vcf"], [title="Portfolio.pdf"], [title="Resume.pdf"], [title="简历.pdf"])) {
+  display: none !important;
+}
+
+/* 联系区仅显示邮箱，隐藏合作评价和简历入口。 */
+#contact [role="tab"]:not([id$="-tab-0"], [id$="-tab-1"]),
+#contact [role="tabpanel"] > div:nth-child(2) > :not([data-local-zh="wechat-placeholder"]),
+#about a[href*="github.com"],
+footer a[href*="github.com"],
+a[href="/resume.pdf"],
+#about > div:has(> h3 + ol),
+#about div:has(> h3 + div > figure) {
+  display: none !important;
+}
+[data-local-zh="contact-feedback"] { align-self: center; font-size: .85em; }
+
+:is([data-debug-case-one], [data-obs-case]) section:is([aria-labelledby="problem"], [aria-labelledby="built"]),
+:is([data-debug-case-one], [data-obs-case]) nav li:has(a:is([href="#problem"], [href="#built"])) {
+  display: none !important;
+}
+[data-debug-case-one] section[aria-labelledby="screens"] figure:nth-of-type(n+2) button > span {
+  aspect-ratio: 1206 / 2144;
+}
+[data-debug-case-one] section[aria-labelledby="screens"] figure:nth-of-type(n+2) button img {
+  object-fit: contain;
+}
+
+/* 摄影案例沿用旧地址，当前展示相机封面，隐藏原愿望清单的案例章节。 */
+[data-photography-case] section[aria-labelledby]:not([data-local-zh]),
+[data-photography-case] aside > :not([data-local-zh]),
+[data-photography-case] dl[aria-label="Outcomes"],
+a[href="https://giftbe.de"],
+a[href="https://giftbe.de/"] {
+  display: none !important;
+}
+
+.photography-chapter h2 { scroll-margin-top: 4rem; }
+.photography-grid {
+  display: grid;
+  gap: clamp(.75rem, 2vw, 1.5rem);
+  padding: clamp(.75rem, 2vw, 1.5rem);
+}
+.photography-grid figure {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.photography-mount {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding: clamp(.25rem, .7vw, .5rem);
+}
+.photography-grid img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 75vh;
+  object-fit: contain;
+}
+@media (min-width: 768px) {
+  .photography-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* 只隐藏案例图库的封面缩略框，保留其余截图原有的放大按钮。 */
+:is([data-debug-case-one], [data-obs-case]) section[aria-labelledby="screens"] figure:first-of-type,
+[data-live-case-panel] > dl,
+[data-live-case-panel] > dl + div:not(:has(a)) {
+  display: none !important;
+}
+
+[data-local-zh="live-challenges"] h2 {
+  margin: 0 0 .65rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+[data-local-zh="live-challenges"] dl {
+  display: grid;
+  gap: .4rem;
+  margin: 0;
+  font-size: .875rem;
+  line-height: 1.5;
+}
+
+[data-local-zh="live-challenges"] dt {
+  border-top: 1px solid #0003;
+  padding-top: .55rem;
+  font-weight: 700;
+}
+
+[data-local-zh="live-challenges"] dd {
+  margin: 0 0 .25rem;
+}
+
+/* 隐藏带有旧项目名称的首屏背景图。 */
+main > header > span:has(img:is([src*="case-iconly-pro.webp"], [src*="case-campaign-lark.webp"], [src*="case-giftbede.webp"])) {
+  visibility: hidden;
+}
+
+:is([data-debug-case-one], [data-obs-case]) section[aria-labelledby="screens"] figcaption,
+[data-debug-case-one] dl[aria-label="Outcomes"] {
+  display: none;
+}
+
+[data-obs-case] section[aria-labelledby="screens"] figure button > span {
+  aspect-ratio: 4 / 3;
+}
+
+[data-obs-case] section[aria-labelledby="screens"] figure button img {
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  [data-obs-case] section[aria-labelledby="screens"] figure:last-of-type {
+    grid-column: 1 / -1;
+    width: min(100%, 690px);
+    justify-self: center;
+  }
+}
+
+.photography-workflow {
+  margin-block: 1rem 0;
+  padding: 0;
+}
+.photography-workflow > * {
+  padding: .75rem 0;
+  border-top: 1px solid #0003;
+}
+.photography-workflow dt { font-weight: 700; }
+.photography-workflow dd { margin: .25rem 0 0; }
+.photography-workflow li { list-style: none; }
+.photography-mount a { cursor: zoom-in; }
+.photography-toc {
+  display: grid;
+  gap: .45rem;
+  padding: 0 1rem 1rem;
+}
+
+[data-photography-case] .photography-gear,
+[data-photography-case] .photography-invite {
+  font-family: var(--font-display, system-ui), "Microsoft YaHei", sans-serif;
+  font-size: clamp(1.65rem, 3.5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+[data-photography-case] .photography-gear {
+  color: var(--color-accent-ink, #006e70);
+  letter-spacing: .018em;
+}
+
+[data-local-zh="floppy-photos"] {
+  display: grid;
+  gap: 1rem;
+}
+.floppy-photo {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  gap: .85rem;
+  margin: 0;
+}
+.floppy-photo + .floppy-photo {
+  padding-top: 1rem;
+  border-top: 1px solid #0003;
+}
+.floppy-photo h2 {
+  margin: 0 0 .35rem;
+  font-size: 1em;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.floppy-photo p {
+  margin: 0;
+  font-size: .88em;
+  line-height: 1.5;
+}
+.floppy-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 13rem;
+  object-fit: contain;
+  object-position: right center;
+}
+
+[data-audio-case] section[aria-labelledby]:not([data-local-zh]),
+[data-audio-case] aside > :not([data-local-zh]),
+[data-audio-case] dl[aria-label="Outcomes"] {
+  display: none !important;
+}
+.audio-case-chapter h2 {
+  margin: 0 0 .8rem;
+  font-size: clamp(1.25rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+  scroll-margin-top: 4rem;
+}
+.audio-device {
+  padding: .75rem 0;
+}
+.audio-device h3 {
+  margin: 0 0 .35rem;
+  font-size: 1em;
+  font-weight: 700;
+}
+.audio-device a { cursor: zoom-in; }
+.audio-case-toc {
+  padding: 1rem;
+  border: 1px solid;
+  background: var(--color-paper, #f6f3e9);
+}
+@media (max-width: 520px) {
+  .audio-case-chapter .audio-device { grid-template-columns: 1fr; }
+}
+
+[data-kuaishou-case] section[aria-labelledby="screens"] figure:first-of-type figcaption {
+  display: none;
+}
+
+[data-stage-case] aside a[href*="wassieverse.c-na.dev"] {
+  display: none !important;
+}
+[data-stage-case] section[aria-labelledby="screens"] figure button img {
+  object-fit: contain;
+}
+
+article[aria-labelledby="cs-title"] aside a[href*="laelaps.c-na.dev"] {
+  display: none !important;
+}
+
+/* 贴近开发板的场景内彩蛋卡片，不遮挡整个场景。 */
+[data-local-zh="esp32-dialog"] {
+  position: fixed; z-index: 10000; left: 50%; top: 25%;
+  width: min(300px, calc(100vw - 24px)); box-sizing: border-box;
+  color: #111; background: #fffef8; border: 3px solid #080808;
+  box-shadow: 5px 5px 0 #080808;
+  font: 13px/1.7 "Microsoft YaHei", system-ui, sans-serif;
+  animation: esp32-dialog-in .18s ease-out both;
+}
+[data-local-zh="esp32-dialog"]::after {
+  content: ""; position: absolute; left: calc(50% - 7px); bottom: -9px;
+  width: 12px; height: 12px; background: #fffef8;
+  border-right: 3px solid #080808; border-bottom: 3px solid #080808;
+  transform: rotate(45deg);
+}
+.esp32-dialog-bar { display: flex; justify-content: space-between; padding: 5px 12px; color: #111; background: #fffef8; border-bottom: 2px solid #080808; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+.esp32-dialog-body { padding: 14px 16px 16px; }
+.esp32-dialog-tag { margin: 0 0 4px; color: #555; font-size: 10px; letter-spacing: 2px; }
+[data-local-zh="esp32-dialog"] h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.5; font-weight: 700; }
+#esp32-dialog-description { margin: 0; color: #333; }
+.esp32-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.esp32-dialog-actions button { min-width: 76px; padding: 5px 12px; border: 2px solid #080808; border-radius: 0; background: #fffef8; color: #111; font: inherit; cursor: pointer; box-shadow: 3px 3px 0 #080808; }
+.esp32-dialog-actions [data-esp32-confirm] { color: #fff; background: #111; border-color: #080808; font-weight: 700; }
+.esp32-dialog-actions button:hover { background: #e5e5dd; transform: translate(-1px, -2px); box-shadow: 4px 5px 0 #080808; }
+.esp32-dialog-actions [data-esp32-confirm]:hover { background: #353535; color: #fff; }
+.esp32-dialog-actions button:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 #080808; }
+.esp32-dialog-actions button:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+@keyframes esp32-dialog-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { [data-local-zh="esp32-dialog"] { animation: none; } }
+
+/* 场景中的立体指针始终位于彩蛋卡片上方，且不拦截点击。 */
+[data-scene-cursor] { z-index: 2147483647 !important; pointer-events: none !important; }
+
+/* 首屏入口固定上下排列，桌面探索返回后同样适用。 */
+[data-hero-actions] { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+[data-hero-actions] > [data-local-zh="blog-link-shell"] { display: flex; align-items: center; gap: 12px; }
+[data-entry-hint] { position: static; background: #fffef8; color: #111; border: 1px solid #111; padding: 4px 8px; margin: 0; box-shadow: none; font-size: 12px; font-weight: 700; line-height: 1.4; white-space: nowrap; }
+.debug-entry-hint[hidden] { display: none !important; }
+
+/* 系统版本点击彩蛋，沿用白底黑边的桌面提示风格。 */
+[data-harmony-version] { cursor: pointer; }
+[data-harmony-version]:hover { text-decoration: underline; text-underline-offset: 3px; }
+[data-harmony-version]:focus-visible { outline: 1px dashed #111; outline-offset: 3px; }
+[data-local-zh="harmony-version-tip"] { position: fixed; z-index: 10010; max-width: calc(100vw - 20px); box-sizing: border-box; padding: 7px 10px; border: 2px solid #111; background: #fffef8; color: #111; box-shadow: 3px 3px 0 #111; font: 700 12px/1.5 "Microsoft YaHei", sans-serif; pointer-events: none; }

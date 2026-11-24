@@ -1,0 +1,272 @@
+{
+  "folders": [
+    {
+      "id": "career-2019-folder",
+      "name": "画面调试",
+      "system": true,
+      "children": [
+        {
+          "id": "work-douyin",
+          "name": "抖音直播｜美颜与肤色",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        },
+        {
+          "id": "work-obs",
+          "name": "OBS｜滤镜与场景",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        },
+        {
+          "id": "work-kuaishou",
+          "name": "快手直播｜舞台与人像",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        }
+      ]
+    },
+    {
+      "id": "career-2021-folder",
+      "name": "声音优化",
+      "system": true,
+      "children": [
+        {
+          "id": "work-audio",
+          "name": "声卡调试｜清晰收音",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        },
+        {
+          "id": "work-tone",
+          "name": "音色优化｜讲话与演唱",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        }
+      ]
+    },
+    {
+      "id": "career-2023-folder",
+      "name": "演播室搭建",
+      "system": true,
+      "children": [
+        {
+          "id": "work-studio",
+          "name": "室内演播厅｜灯光与机位",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        },
+        {
+          "id": "work-studio-check",
+          "name": "开播联调｜走位与切场",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        }
+      ]
+    },
+    {
+      "id": "career-2025-folder",
+      "name": "户外舞台",
+      "system": true,
+      "children": [
+        {
+          "id": "work-stage",
+          "name": "室外大舞台｜场地规划",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        },
+        {
+          "id": "work-stage-sync",
+          "name": "声光协同｜多机位彩排",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        }
+      ]
+    },
+    {
+      "id": "career-today-folder",
+      "name": "摄影作品",
+      "system": true,
+      "children": [
+        {
+          "id": "work-photo",
+          "name": "城市风光｜重庆影像",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        },
+        {
+          "id": "work-photo-gear",
+          "name": "拍摄器材｜构图与光线",
+          "kind": "file",
+          "system": true,
+          "app": "note"
+        }
+      ]
+    }
+  ],
+  "notes": {
+    "work-douyin": {
+      "id": "work-douyin",
+      "title": "抖音直播｜美颜与肤色",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "围绕主播妆造、灯光和机位，调整直播伴侣中的美颜、肤色与曝光，让人物与直播间背景自然协调。"
+        },
+        {
+          "heading": "调试重点",
+          "body": "先确认相机与采集卡信号，再检查磨皮强度、肤色偏色、高光和暗部层次。结合手机端试播回看，避免只看电脑预览判断效果。"
+        }
+      ]
+    },
+    "work-obs": {
+      "id": "work-obs",
+      "title": "OBS｜滤镜与场景",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "把画面问题拆成可以逐项核对的滤镜环节，让亮度、色彩和素材效果更容易调整。"
+        },
+        {
+          "heading": "调试重点",
+          "body": "用亮度校正处理局部明暗，用调色统一肤色与色调，再按需加入着色器效果。配置场景和素材后，检查滤镜兼容性与推流负载。"
+        }
+      ]
+    },
+    "work-kuaishou": {
+      "id": "work-kuaishou",
+      "title": "快手直播｜舞台与人像",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "为舞台全景与单人人像分别配置画面，兼顾舞台氛围、人物肤色和竖屏观看体验。"
+        },
+        {
+          "heading": "调试重点",
+          "body": "先确定机位、构图和曝光，再处理逆光、镜片反射与背景层次。通过走位和彩排检查切换场景时的亮度、色彩和人物位置。"
+        }
+      ]
+    },
+    "work-audio": {
+      "id": "work-audio",
+      "title": "声卡调试｜清晰收音",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "从收音链路开始检查，让讲话和演唱在直播端听得清楚，减少噪声、失真和重复采集。"
+        },
+        {
+          "heading": "调试重点",
+          "body": "核对麦克风增益、声卡路由和软件采集来源，排查底噪、削波与回声，再检查人声、伴奏和系统音的比例。"
+        }
+      ]
+    },
+    "work-tone": {
+      "id": "work-tone",
+      "title": "音色优化｜讲话与演唱",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "根据声音特点和直播用途调整音色，让清晰度、厚度与听感保持平衡。"
+        },
+        {
+          "heading": "调试重点",
+          "body": "按需要调整均衡、去齿音和压缩；演唱场景再检查混响与伴奏关系。以直播端回听确认最终音量和效果，留下便于日常使用的设置。"
+        }
+      ]
+    },
+    "work-studio": {
+      "id": "work-studio",
+      "title": "室内演播厅｜灯光与机位",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "结合场地、已有设备和节目形式，规划人物面光、轮廓光、背景光与直播机位。"
+        },
+        {
+          "heading": "搭建重点",
+          "body": "优先解决镜头中能看出差别的问题，明确设备复用与补充需求。装好后用实际相机和直播软件核对曝光、白平衡与肤色。"
+        }
+      ]
+    },
+    "work-studio-check": {
+      "id": "work-studio-check",
+      "title": "开播联调｜走位与切场",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "按单播、团播和移动表演的实际流程检查灯光覆盖与画面衔接。"
+        },
+        {
+          "heading": "验收重点",
+          "body": "检查走位区域的照度、色温、频闪和眩光，再通过切场与试播回看核对画面。整理常用灯位和预设，方便日常开播。"
+        }
+      ]
+    },
+    "work-stage": {
+      "id": "work-stage",
+      "title": "室外大舞台｜场地规划",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "把舞台、表演走位、灯位和直播机位放在同一套规划中，兼顾现场观看与直播画面。"
+        },
+        {
+          "heading": "搭建重点",
+          "body": "先勘察场地，再确定台面、设备与机位位置。分别考虑白天、日落和入夜的补光，核对自然光、舞台灯与屏幕对人物肤色的影响。"
+        }
+      ]
+    },
+    "work-stage-sync": {
+      "id": "work-stage-sync",
+      "title": "声光协同｜多机位彩排",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "让灯光、相机、收音与导播切换跟随同一份节目流程，减少正式直播中的衔接问题。"
+        },
+        {
+          "heading": "联调重点",
+          "body": "用灰卡和参考机位对齐曝光、白平衡与色彩；在流程表中标明音乐起点、灯光提示和切机点，彩排时逐段检查。"
+        }
+      ]
+    },
+    "work-photo": {
+      "id": "work-photo",
+      "title": "城市风光｜重庆影像",
+      "sections": [
+        {
+          "heading": "作品方向",
+          "body": "围绕重庆城市天际线、江岸建筑和夜间光影，记录同一座城市在不同时段的变化。"
+        },
+        {
+          "heading": "拍摄重点",
+          "body": "关注日落前后的天空层次、建筑轮廓与江面反射；夜景中兼顾灯光高光、暗部细节和车流轨迹。"
+        }
+      ]
+    },
+    "work-photo-gear": {
+      "id": "work-photo-gear",
+      "title": "拍摄器材｜构图与光线",
+      "sections": [
+        {
+          "heading": "器材配置",
+          "body": "Sony A7M5、A7C2，搭配 24–70 GM II 与 16–35 GM II 镜头。"
+        },
+        {
+          "heading": "创作思路",
+          "body": "根据空间与拍摄距离选择焦段：广角交代城市与建筑关系，中焦提炼画面细节。先观察光线与构图，再调整曝光，保留现场氛围。"
+        }
+      ]
+    }
+  }
+}

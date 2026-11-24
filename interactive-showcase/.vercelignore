@@ -1,0 +1,9 @@
+__pycache__
+*.log
+mac-original.glb
+mac-texture-0.png
+frames
+sounds
+public
+.env*
+!.env.example
