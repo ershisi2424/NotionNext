@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     if (all) {
       const results = []
       try {
-        await res.revalidate('/')
+        await res.revalidate(process.env.BLOG_BASE_PATH || '/')
         results.push({ path: '/', revalidated: true })
       } catch (e) {
         results.push({ path: '/', revalidated: false, error: e.message })
@@ -105,6 +105,10 @@ function normalizePath(p) {
   if (!normalized.startsWith('/')) normalized = '/' + normalized
   if (normalized.length > 1 && normalized.endsWith('/')) {
     normalized = normalized.slice(0, -1)
+  }
+  const base = process.env.BLOG_BASE_PATH || ''
+  if (base && normalized !== base && !normalized.startsWith(base + '/')) {
+    return normalized === '/' ? base : base + normalized
   }
   return normalized
 }

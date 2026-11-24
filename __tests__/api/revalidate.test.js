@@ -38,6 +38,16 @@ test('all clears stores and revalidates homepage', async () => {
   expect(clearDataCache).toHaveBeenCalledTimes(1)
   expect(res.revalidate).toHaveBeenCalledWith('/')
 })
+test('subpath deployment refreshes blog routes instead of the root showcase', async () => {
+  process.env.BLOG_BASE_PATH = '/blog'
+  try {
+    const res = response()
+    await handler(request({ paths: ['/', '/article/example', '/blog/article/other'] }), res)
+    expect(res.revalidate.mock.calls).toEqual([['/blog'], ['/blog/article/example'], ['/blog/article/other']])
+  } finally {
+    delete process.env.BLOG_BASE_PATH
+  }
+})
 test('page refresh failure is reported as failure', async () => {
   const res = response()
   res.revalidate.mockRejectedValueOnce(new Error('Notion unavailable'))

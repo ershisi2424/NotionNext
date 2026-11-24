@@ -73,6 +73,14 @@
     {
       "source": "/logos/:path*",
       "destination": "/api/showcase"
+    },
+    {
+      "source": "/api/notion-comments",
+      "destination": "/blog/api/notion-comments"
+    },
+    {
+      "source": "/api/subscribe",
+      "destination": "/blog/api/subscribe"
     }
   ]
 }
