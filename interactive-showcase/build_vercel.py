@@ -1,4 +1,5 @@
 """把快照中的公开资源导出到 Vercel CDN，保留网页设备变体由函数处理。"""
+import argparse
 import json
 import shutil
 from pathlib import Path
@@ -8,7 +9,10 @@ ROOT = Path(__file__).resolve().parent
 
 
 def main():
-    output = ROOT / 'public'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output')
+    options = parser.parse_args()
+    output = Path(options.output).resolve() if options.output else ROOT / 'public'
     output.mkdir(exist_ok=True)
     count = 0
     for metadata in (ROOT / 'snapshot').glob('*/*/response.json'):

@@ -11,6 +11,10 @@
   },
   "rewrites": [
     {
+      "source": "/_next/image",
+      "destination": "/api/showcase?__showcase_path=/_next/image"
+    },
+    {
       "source": "/",
       "destination": "/api/showcase?__showcase_path=/"
     },
@@ -44,35 +48,35 @@
     },
     {
       "source": "/_next/:path*",
-      "destination": "/api/showcase?__showcase_path=/_next/:path*"
+      "destination": "/blog/__showcase-assets/_next/:path*"
     },
     {
       "source": "/__zh/:path*",
-      "destination": "/api/showcase?__showcase_path=/__zh/:path*"
+      "destination": "/blog/__showcase-assets/__zh/:path*"
     },
     {
       "source": "/models/:path*",
-      "destination": "/api/showcase?__showcase_path=/models/:path*"
+      "destination": "/blog/__showcase-assets/models/:path*"
     },
     {
       "source": "/textures/:path*",
-      "destination": "/api/showcase?__showcase_path=/textures/:path*"
+      "destination": "/blog/__showcase-assets/textures/:path*"
     },
     {
       "source": "/sounds/:path*",
-      "destination": "/api/showcase?__showcase_path=/sounds/:path*"
+      "destination": "/blog/__showcase-assets/sounds/:path*"
     },
     {
       "source": "/stills/:path*",
-      "destination": "/api/showcase?__showcase_path=/stills/:path*"
+      "destination": "/blog/__showcase-assets/stills/:path*"
     },
     {
       "source": "/projects/:path*",
-      "destination": "/api/showcase?__showcase_path=/projects/:path*"
+      "destination": "/blog/__showcase-assets/projects/:path*"
     },
     {
       "source": "/logos/:path*",
-      "destination": "/api/showcase?__showcase_path=/logos/:path*"
+      "destination": "/blog/__showcase-assets/logos/:path*"
     },
     {
       "source": "/api/notion-comments",
@@ -84,27 +88,27 @@
     },
     {
       "source": "/draco/:path*",
-      "destination": "/api/showcase?__showcase_path=/draco/:path*"
+      "destination": "/blog/__showcase-assets/draco/:path*"
     },
     {
       "source": "/icons/:path*",
-      "destination": "/api/showcase?__showcase_path=/icons/:path*"
+      "destination": "/blog/__showcase-assets/icons/:path*"
     },
     {
       "source": "/tech-icons/:path*",
-      "destination": "/api/showcase?__showcase_path=/tech-icons/:path*"
+      "destination": "/blog/__showcase-assets/tech-icons/:path*"
     },
     {
       "source": "/about/:path*",
-      "destination": "/api/showcase?__showcase_path=/about/:path*"
+      "destination": "/blog/__showcase-assets/about/:path*"
     },
     {
       "source": "/testimonials/:path*",
-      "destination": "/api/showcase?__showcase_path=/testimonials/:path*"
+      "destination": "/blog/__showcase-assets/testimonials/:path*"
     },
     {
       "source": "/gifs/:path*",
-      "destination": "/api/showcase?__showcase_path=/gifs/:path*"
+      "destination": "/blog/__showcase-assets/gifs/:path*"
     },
     {
       "source": "/tank/:path*",
@@ -150,5 +154,6 @@
       "source": "/manifest.webmanifest",
       "destination": "/api/showcase?__showcase_path=/manifest.webmanifest"
     }
-  ]
+  ],
+  "buildCommand": "python interactive-showcase/build_vercel.py --output public/__showcase-assets && yarn build"
 }
