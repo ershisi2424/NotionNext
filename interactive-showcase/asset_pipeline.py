@@ -65,7 +65,11 @@ def prepare_config():
     rules = [rule for rule in config['rewrites'] if not rule.get('source', '').startswith(PREFIX) and rule.get('source') != '/__showcase-image' and not (rule.get('source') == '/_next/image' and rule.get('has'))]
     image_rules = [{
         'source': '/__showcase-image',
-        'has': [{'type': 'query', 'key': k, 'value': re.escape(v)} for k, v in zip(('url', 'w', 'q'), key)],
+        # Hydrated Next Image components receive versioned asset paths from JS.
+        # Match both these paths and the unversioned paths in the cached HTML.
+        'has': [{'type': 'query', 'key': k, 'value':
+                 (r'(?:/__showcase/v/[a-f0-9]{20})?' if k == 'url' else '') + re.escape(v)}
+                for k, v in zip(('url', 'w', 'q'), key)],
         'destination': f'/blog/__showcase-assets/v/{release}/images/{name}',
     } for key, name in sorted(images.items())]
     config['rewrites'] = [{'source': PREFIX + ':version/:path*', 'destination': '/blog/__showcase-assets/v/:version/:path*'}, *image_rules, {'source': '/__showcase-image', 'destination': '/api/showcase?__showcase_path=/_next/image'}, *rules]

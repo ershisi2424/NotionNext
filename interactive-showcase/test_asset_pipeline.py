@@ -1,10 +1,22 @@
 import hashlib
 import json
+import re
 import unittest
 from asset_pipeline import ROOT, MANIFEST, image_key, records, rewrite, version
 
 
 class AssetPipelineTests(unittest.TestCase):
+    def test_image_routes_accept_hydrated_versioned_sources(self):
+        config = json.loads((ROOT.parent / 'vercel.json').read_text())
+        routes = [r for r in config['rewrites'] if r['source'] == '/__showcase-image' and r.get('has')]
+        self.assertTrue(routes)
+        for route in routes:
+            pattern = next(h['value'] for h in route['has'] if h['key'] == 'url')
+            source = re.sub(r'^\(\?:.*?\)\?', '', pattern)
+            source = re.sub(r'\\(.)', r'\1', source)
+            self.assertIsNotNone(re.fullmatch(pattern, source))
+            self.assertIsNotNone(re.fullmatch(pattern, '/__showcase/v/8e5cad428d2717135ff1' + source))
+
     def test_version_matches_inputs(self):
         self.assertEqual(json.loads(MANIFEST.read_text())['version'], version())
 
