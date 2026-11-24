@@ -2,6 +2,20 @@
 (async function localize() {
   'use strict';
 
+  // The captured React header can retain a page-local scroll callback. Use a
+  // document navigation for the brand so case pages always return home.
+  document.addEventListener('click', (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element && event.target.closest('header a[href]');
+    if (!link || link.closest('nav') || link.target || link.hasAttribute('download')) return;
+    const target = new URL(link.href, location.href);
+    if (target.origin !== location.origin || target.pathname !== '/' || target.hash !== '#top') return;
+    if (location.pathname === '/') return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    location.assign('/#top');
+  }, true);
+
   // Download alongside the page; DOM translation still waits for hydration.
   const dictionaryResponse = fetch('/__zh/messages.tsv').then(async response => {
     if (!response.ok) throw new Error('无法读取简体中文词典');
