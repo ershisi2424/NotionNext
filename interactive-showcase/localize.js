@@ -1038,34 +1038,76 @@
   syncWechatPlaceholder();
   openWechatContact();
 
-  // 只处理变动的节点，覆盖菜单、图库和 3D 场景动态生成的网页文本。
+  // Batch only added/text nodes, and synchronize features for their own regions.
   const pending = new Set();
+  const dirty = new Set();
   let scheduled = false;
+  let lastPath = location.pathname;
+  const featureRegions = {
+    entries: 'header, section[aria-labelledby="hero-name"]',
+    photography: '[data-photography-case], [data-local-zh="photography-gallery"]',
+    audio: '[data-audio-case]',
+    live: '[data-debug-case-one], [data-obs-case]',
+    contact: '#contact',
+    floppy: 'div.mx-auto.flex'
+  };
+  function markFeatures(node) {
+    const element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    if (!element) return;
+    for (const [feature, selector] of Object.entries(featureRegions)) {
+      if (feature === 'floppy' && location.pathname !== '/explore') continue;
+      if (element.closest(selector) || element.querySelector(selector)) dirty.add(feature);
+    }
+  }
+  function flushChanges() {
+    scheduled = false;
+    if (lastPath !== location.pathname) {
+      lastPath = location.pathname;
+      for (const feature of Object.keys(featureRegions)) dirty.add(feature);
+      dirty.add('route');
+    }
+    // Drop descendants when their ancestor is already queued for translation.
+    const nodes = [...pending].filter(node => node.isConnected);
+    pending.clear();
+    for (const node of nodes) {
+      if (!nodes.some(parent => parent !== node && parent.contains(node))) scan(node);
+    }
+    const features = new Set(dirty);
+    dirty.clear();
+    if (features.has('route')) syncGameGuide();
+    if (features.has('entries')) syncBlogLink();
+    if (features.has('photography')) syncPhotographyGallery();
+    if (features.has('floppy')) {
+      syncPhotographyFloppy();
+      syncAudioCase();
+    } else if (features.has('audio')) syncAudioCase();
+    if (features.has('live')) syncLiveCasePanel();
+    if (features.has('contact')) {
+      syncWechatPlaceholder();
+      openWechatContact();
+    }
+  }
+  function scheduleChanges() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(flushChanges);
+  }
   const observer = new MutationObserver((records) => {
     for (const record of records) {
+      markFeatures(record.target);
       if (record.type === 'attributes') translateElement(record.target);
       else if (record.type === 'characterData') pending.add(record.target);
       else {
-        pending.add(record.target);
-        for (const node of record.addedNodes) pending.add(node);
+        // Removing/replacing a child does not require rescanning all its siblings.
+        for (const node of record.addedNodes) {
+          pending.add(node);
+          markFeatures(node);
+        }
       }
     }
-    if (scheduled || !pending.size) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      for (const node of pending) if (node.isConnected) scan(node);
-      pending.clear();
-      syncGameGuide();
-      syncBlogLink();
-      syncPhotographyGallery();
-      syncPhotographyFloppy();
-      syncAudioCase();
-      syncLiveCasePanel();
-      syncWechatPlaceholder();
-      openWechatContact();
-    });
+    if (pending.size || dirty.size || lastPath !== location.pathname) scheduleChanges();
   });
+  window.addEventListener('popstate', () => { dirty.add('route'); scheduleChanges(); });
   observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes });
   const title = document.querySelector('title');
   if (title) observer.observe(title, { childList: true, characterData: true, subtree: true });
