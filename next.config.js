@@ -194,6 +194,7 @@ function getOutput() {
 }
 
 const nextConfig = {
+  basePath: process.env.BLOG_BASE_PATH || '',
   eslint: {
     ignoreDuringBuilds: true
   },

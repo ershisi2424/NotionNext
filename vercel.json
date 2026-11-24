@@ -2,5 +2,77 @@
   "cleanUrls": false,
   "trailingSlash": false,
   "ignoreCommand": "case \"$VERCEL_GIT_COMMIT_MESSAGE\" in *\"[skip-version]\"*) exit 0;; *) exit 1;; esac",
-  "headers": []
+  "headers": [],
+  "functions": {
+    "api/showcase.py": {
+      "includeFiles": "interactive-showcase/**",
+      "excludeFiles": "{interactive-showcase/public/**,interactive-showcase/mac-*,interactive-showcase/__pycache__/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/explore",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/works/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/tank",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/space-invader",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/tetris",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/pac-man",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/snake",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/_next/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/__zh/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/models/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/textures/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/sounds/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/stills/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/projects/:path*",
+      "destination": "/api/showcase"
+    },
+    {
+      "source": "/logos/:path*",
+      "destination": "/api/showcase"
+    }
+  ]
 }
