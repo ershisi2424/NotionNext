@@ -253,7 +253,7 @@ class Mirror(BaseHTTPRequestHandler):
         status, content_type, content, response_headers = response
         if status == 200 and content_type.startswith("text/html") and route.path.startswith("/works/"):
             # Preserve the public document and use full navigation between case studies.
-            content = content.replace(b"</body>", CASE_NAVIGATION + b"</body>", 1)
+            content = content.replace(b"</head>", CASE_NAVIGATION + b"</head>", 1)
         if status == 200 and content_type.startswith("text/html"):
             content = self.prepare_document(content)
         self.send_response(status)
