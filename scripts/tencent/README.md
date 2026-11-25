@@ -26,3 +26,29 @@ Validate homepage, `/explore`, case images (including versioned optimizer URLs),
 Verify Notion fetches from the server, then change a controlled draft and confirm
 the new deployment reads it after cache expiry or authenticated revalidation.
 Do not change published content just to exercise the pipeline.
+
+## Certificate renewal
+
+The DNS renewal workflow uses Ubuntu's `lego` package and DNSPod DNS-01. HTTP
+validation is unsuitable while the domain is intercepted for missing ICP filing.
+Run `bash scripts/tencent/install-renewal.sh` to install the service and timer
+without enabling them. Create `/etc/notionnext-acme/credentials.env` from
+`acme-credentials.env.example`, owned by root with mode 600, with a dedicated
+domain-scoped DNS identity. The owner must accept the Let's Encrypt subscriber
+agreement before setting `ACME_ACCEPT_TERMS=yes`. Do not use the main account key.
+`dns-renewal-policy.example.json` scopes record operations to the DNSPod domain
+ID 100332863 (`242424.art`). Domain listing is account-wide because the provider
+requires it. The script creates/deletes TXT challenges, but the IAM record-write
+permission is domain-wide; it is not limited to TXT records. Have the owner
+approve this access explicitly before creating or granting the dedicated identity.
+
+Run `bash scripts/tencent/renew-certificate.sh staging` first. This uses a separate
+ACME account/state directory and never installs an untrusted staging certificate.
+Then run `bash scripts/tencent/renew-certificate.sh` for first production issuance.
+Only after both succeed, run `systemctl enable --now notionnext-certificate.timer`.
+The timer checks twice daily with a random delay and renews within 30 days of
+expiry. Deployment verifies coverage of both hostnames, remaining validity,
+trusted certificate chain and private key match before changing installed files.
+An nginx configuration or reload failure restores the previous certificate pair.
+Check `journalctl -u notionnext-certificate` and `systemctl list-timers` for status.
+This does not change Notion configuration, app services, or the old Vercel domain.
