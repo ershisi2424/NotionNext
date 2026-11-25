@@ -13,7 +13,7 @@ fi
 set -a
 source /etc/notionnext.env
 set +a
-export NODE_OPTIONS=--max-old-space-size=2304
+export NODE_OPTIONS='--max-old-space-size=2304 --dns-result-order=ipv4first'
 export NEXT_BUILD_CPUS=1
 export BUILD_PREFETCH_ENABLED=false
 export NEXT_TELEMETRY_DISABLED=1
@@ -23,6 +23,6 @@ python3 interactive-showcase/asset_pipeline.py
 python3 interactive-showcase/build_vercel.py --output public/__showcase-assets
 yarn build
 bash scripts/tencent/install-services.sh
-curl --fail --retry 10 --retry-delay 3 --retry-connrefused -H 'Host: 242424.art' http://127.0.0.1/blog -o /dev/null
+curl --fail --retry 10 --retry-delay 3 --retry-all-errors -H 'Host: 242424.art' http://127.0.0.1/blog -o /dev/null
 curl --fail -H 'Host: 242424.art' http://127.0.0.1/sitemap.xml -o /dev/null
 printf 'DEPLOYMENT_READY\n'
