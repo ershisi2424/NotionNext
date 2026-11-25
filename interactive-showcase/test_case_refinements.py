@@ -31,10 +31,8 @@ class CaseRefinementTests(unittest.TestCase):
             if '"PageTransition",()=>d' not in source:
                 continue
             updated = refine_case_images(source)
-            self.assertIn('case-chess-navigation-v1', updated)
-            self.assertIn('window.addEventListener("desk-case-navigate",navigate)', updated)
-            self.assertIn('C?"covered":"idle"', updated)
-            self.assertIn('image.decode().catch', updated)
+            self.assertIn('shared-chess-navigation-v2', updated)
+            self.assertIn('n.pathname==="/"||n.pathname.startsWith("/works/")', updated)
             self.assertEqual(updated, refine_case_images(updated))
             count += 1
         self.assertEqual(count, 1)

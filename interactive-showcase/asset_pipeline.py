@@ -30,7 +30,7 @@ def version():
         if any(kind in record['content_type'] for kind in ('text/', 'javascript', 'json')):
             content = content.replace(b'\r\n', b'\n')
         digest.update(hashlib.sha256(content).digest())
-    for name in ('localize.js', 'localize.css', 'zh-CN.tsv', 'asset_pipeline.py', 'build_vercel.py', 'local_zh.py', 'scene_performance.py', 'native_chinese.py', 'native-zh.json', 'compile_chinese.cjs', 'case_refinements.py'):
+    for name in ('localize.js', 'localize.css', 'zh-CN.tsv', 'asset_pipeline.py', 'build_vercel.py', 'local_zh.py', 'scene_performance.py', 'native_chinese.py', 'native-zh.json', 'compile_chinese.cjs', 'case_refinements.py', 'navigation.js', 'mirror.py'):
         digest.update((ROOT / name).read_bytes().replace(b'\r\n', b'\n'))
     for path in sorted([*(ROOT / 'photography').rglob('*'), *(ROOT / 'contacts').rglob('*')]):
         if path.is_file():

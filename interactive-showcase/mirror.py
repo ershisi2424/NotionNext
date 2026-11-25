@@ -37,29 +37,7 @@ TRANSIENT_STATUSES = {429, 500, 502, 503, 504}
 RESPONSE_HEADERS = (
     "Cache-Control", "Vary", "X-Nextjs-Postponed", "X-Nextjs-Prerender", "X-Nextjs-Stale-Time",
 )
-CASE_NAVIGATION = b"""<script>
-try {
-  if (sessionStorage.getItem("desk:case-cover") === location.pathname) {
-    const cover = document.createElement('div');
-    cover.id = 'desk-case-loading-cover';
-    cover.style.cssText = 'position:fixed;inset:0;background:#100f0c;z-index:70;pointer-events:auto';
-    document.documentElement.appendChild(cover);
-    setTimeout(() => cover.remove(), 6000);
-  }
-} catch {}
-document.addEventListener('click', function(event) {
-  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  const link = event.target instanceof Element && event.target.closest('a[href]');
-  if (!link || link.target || link.hasAttribute('download') || link.origin !== location.origin) return;
-  if (!link.pathname.startsWith('/works/') || link.pathname === location.pathname) return;
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      window.dispatchEvent(new CustomEvent("desk-case-navigate", {cancelable:true, detail:link.href}))) {
-    location.assign(link.href);
-  }
-}, true);
-</script>"""
+CASE_NAVIGATION = b"<script>" + Path(__file__).with_name("navigation.js").read_bytes() + b"</script>"
 
 
 def fetch(path, headers=None, offline=False, refresh=False):
@@ -251,7 +229,7 @@ class Mirror(BaseHTTPRequestHandler):
             self.send_error(400)
             return
         status, content_type, content, response_headers = response
-        if status == 200 and content_type.startswith("text/html") and route.path.startswith("/works/"):
+        if status == 200 and content_type.startswith("text/html") and (route.path == "/" or route.path.startswith("/works/")):
             # Preserve the public document and use full navigation between case studies.
             content = content.replace(b"</head>", CASE_NAVIGATION + b"</head>", 1)
         if status == 200 and content_type.startswith("text/html"):

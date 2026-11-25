@@ -2,21 +2,6 @@
 (async function localize() {
   'use strict';
 
-  // Captured React header callbacks may scroll the current case document or
-  // reuse stale router state. Preserve the original home-section destinations
-  // with native anchor navigation, both on the homepage and from case pages.
-  document.addEventListener('click', (event) => {
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const link = event.target instanceof Element && event.target.closest('header a[href]');
-    if (!link || link.target || link.hasAttribute('download')) return;
-    const target = new URL(link.href, location.href);
-    if (target.origin !== location.origin || target.pathname !== '/' ||
-        !['#top', '#work', '#about', '#playground', '#contact'].includes(target.hash)) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    location.assign('/' + target.hash);
-  }, true);
-
   // Keep every tab title free of the original author's name, including
   // metadata applied later by React. Run before waiting for page assets.
   function cleanPageTitle() {
