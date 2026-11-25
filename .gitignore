@@ -76,3 +76,5 @@ webpack-internal:/
 # Generated interactive CDN assets
 /public/__showcase-assets/
 /api/__pycache__/
+
+/scripts/tencent/__pycache__/
