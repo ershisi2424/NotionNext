@@ -29,6 +29,7 @@ def refine_case_navigation(source):
     if NAV_MARKER in source or '"PageTransition",()=>d' not in source:
         return source
     changes = (
+        ('let n=i(t);!n||', 'let n=i(t);if(n?.pathname.startsWith("/works/"))return;!n||'),
         ('function d(){let e=(0,n.useRouter)()',
          'function d(){let C=false;try{C=sessionStorage.getItem("desk:case-cover")===location.pathname}catch{}let e=(0,n.useRouter)()'),
         ('[d,f]=(0,r.useState)("idle"),[p,m]=(0,r.useState)({cols:0,rows:0})',
