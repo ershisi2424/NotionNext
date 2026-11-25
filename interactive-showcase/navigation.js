@@ -22,7 +22,10 @@
   const frames = callback => requestAnimationFrame(() => requestAnimationFrame(callback));
   function scrollToHash(hash, smooth) {
     const target = document.getElementById(hash.slice(1) || 'top');
-    if (!target) return false;
+    if (!target) {
+      if(hash==='#top'){window.scrollTo({top:0,behavior:smooth&&!reduced()?'smooth':'instant'});return true;}
+      return false;
+    }
     const header=document.querySelector('header');
     const inset=(header?.getBoundingClientRect().height||40)+16;
     const top=Math.max(0,scrollY+target.getBoundingClientRect().top-inset);
