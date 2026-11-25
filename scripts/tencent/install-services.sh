@@ -5,7 +5,7 @@ test -f .next/BUILD_ID
 test -f /etc/notionnext.env
 id notionnext >/dev/null 2>&1 || useradd --system --home-dir /opt/notionnext --shell /usr/sbin/nologin notionnext
 install -d -o notionnext -g notionnext /opt/notionnext-cache /var/www/acme
-chown -R notionnext:notionnext .next
+chown -R notionnext:notionnext .next /opt/notionnext-cache
 cat >/etc/systemd/system/notionnext-blog.service <<'EOF'
 [Unit]
 Description=NotionNext live blog

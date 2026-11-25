@@ -18,7 +18,8 @@ export NEXT_BUILD_CPUS=1
 export BUILD_PREFETCH_ENABLED=false
 export NEXT_TELEMETRY_DISABLED=1
 npm install --global yarn@1.22.22 --registry=https://registry.npmmirror.com
-yarn install --frozen-lockfile --network-timeout 180000 --registry https://registry.npmmirror.com
+yarn install --production=false --frozen-lockfile --network-timeout 180000 --registry https://registry.npmmirror.com
+python3 interactive-showcase/asset_pipeline.py
 python3 interactive-showcase/build_vercel.py --output public/__showcase-assets
 yarn build
 bash scripts/tencent/install-services.sh
