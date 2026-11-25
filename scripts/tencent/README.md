@@ -29,7 +29,9 @@ Do not change published content just to exercise the pipeline.
 
 ## Certificate renewal
 
-The DNS renewal workflow uses Ubuntu's `lego` package and DNSPod DNS-01. HTTP
+The DNS renewal workflow uses the official pinned `lego` v5.7.0 release, verified
+against its published SHA-256, and DNSPod DNS-01. Ubuntu's packaged build omits
+the Tencent Cloud DNS provider. HTTP
 validation is unsuitable while the domain is intercepted for missing ICP filing.
 Run `bash scripts/tencent/install-renewal.sh` to install the service and timer
 without enabling them. Create `/etc/notionnext-acme/credentials.env` from

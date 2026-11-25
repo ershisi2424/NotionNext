@@ -13,24 +13,22 @@ set +a
 : "${TENCENTCLOUD_SECRET_KEY:?Missing DNS access key secret}"
 : "${ACME_EMAIL:?Missing ACME account email}"
 test "${ACME_ACCEPT_TERMS:-no}" = yes || { echo 'ACME subscriber agreement has not been accepted' >&2; exit 78; }
-state=/var/lib/notionnext-acme/production
+state=/var/lib/notionnext-acme/production-v5
 server=https://acme-v02.api.letsencrypt.org/directory
 mode=${1:-renew}
 case "$mode" in
   staging)
-    state=/var/lib/notionnext-acme/staging
+    state=/var/lib/notionnext-acme/staging-v5
     server=https://acme-staging-v02.api.letsencrypt.org/directory
     ;;
   renew) ;;
   *) echo 'Usage: renew-certificate.sh [renew|staging]' >&2; exit 64 ;;
 esac
 install -d -m 700 "$state"
-args=(--path "$state" --server "$server" --email "$ACME_EMAIL" --accept-tos --dns tencentcloud --domains 242424.art --domains www.242424.art)
-if [ -s "$state/certificates/242424.art.crt" ]; then
-  /usr/bin/lego "${args[@]}" renew --days 30
-else
-  /usr/bin/lego "${args[@]}" run
-fi
+args=(--path "$state" --server "$server" --email "$ACME_EMAIL" --accept-tos --dns tencentcloud --domains 242424.art --domains www.242424.art --cert.name 242424.art --ipv4only --http-timeout 60 --renew-days 30 --no-random-sleep)
+# The systemd timer already randomizes runs. Lego v5's run handles both issuance
+# and renewal; keep its state separate from incomplete legacy package attempts.
+/usr/local/bin/lego run "${args[@]}"
 if [ "$mode" = staging ]; then
   echo 'STAGING_VALIDATION_OK: staging certificate was not deployed'
   exit 0

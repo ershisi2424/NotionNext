@@ -13,7 +13,7 @@
         "dnspod:CreateRecord",
         "dnspod:DeleteRecord"
       ],
-      "resource": ["qcs::dnspod::uin/*:domain/100332863"]
+      "resource": ["qcs::dnspod::uin/100018485086:domain/100332863"]
     }
   ]
 }
