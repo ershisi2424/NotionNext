@@ -4,7 +4,7 @@
   const key = 'desk:navigation', reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let busy = false, layer = null, pending = null;
   try { pending = JSON.parse(sessionStorage.getItem(key)); sessionStorage.removeItem(key); } catch {}
-  const colors = ['#100f0c', '#191814'];
+  const colors = ['var(--color-room,#0f0e0d)', 'var(--color-room-2,#171513)'];
   function grid(covered) {
     const cols = Math.ceil(innerWidth / 96), rows = Math.ceil(innerHeight / 96);
     const element = document.createElement('div');
