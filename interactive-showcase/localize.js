@@ -118,6 +118,15 @@
     if (separator > 0) dictionary.set(line.slice(0, separator).replace(/\\n/g, '\n').trim().replace(/\s+/g, ' '), line.slice(separator + 1).replace(/\\n/g, '\n'));
   }
 
+  // Native payloads already contain Chinese; resolve source keys only for
+  // existing context-specific content rules, without rewriting UI identifiers.
+  const nativeSourceKeys = new Map();
+  for (const [english, chinese] of dictionary) {
+    if (!nativeSourceKeys.has(chinese)) nativeSourceKeys.set(chinese, english);
+  }
+  nativeSourceKeys.set('二十四调试', 'Sina Gholizadeh');
+  nativeSourceKeys.set('微信', 'LinkedIn');
+
   // 属性改写涵盖屏幕阅读器标签和图片说明。URL、id、表单值和游戏控制不受影响。
   const attributes = ['alt', 'aria-label', 'aria-description', 'title', 'placeholder', 'href'];
   const obsStudioUrl = 'https://obsproject.com/';
@@ -249,7 +258,7 @@
         element.setAttribute('aria-label', '软件系统：Harmonyos-7.11.24，连按10次进入开发者选项');
       }
     }
-    if (element.matches('p') && /^©\s*Sina Gholizadeh,/.test(element.textContent.trim())) {
+    if (element.matches('p') && /^©\s*(?:Sina Gholizadeh|二十四调试),/.test(element.textContent.trim())) {
       element.setAttribute('data-desktop-author-credit', '');
     }
     if (element.matches('a[href*="linkedin.com"], a[href="/#contact-wechat"]')) {
@@ -355,7 +364,7 @@
   function translateText(text) {
     if (!text.parentElement || text.parentElement.closest(excluded)) return;
     const parent = text.parentElement;
-    const key = text.data.trim();
+    const key = nativeSourceKeys.get(text.data.trim()) ?? text.data.trim();
     let next = translate(text.data);
     if (parent.closest('#about figure') && key === 'sina.pict') next = '二十四';
     if (Object.hasOwn(aboutStackLabels, key) && parent.closest(aboutStackButtons + ', ' + aboutStackPreview)) {
@@ -681,10 +690,13 @@
       }
       link.prepend('开始调试');
       if (source.getAttribute('href') === '#work') {
+        source.parentElement.dataset.mobileActions = '';
+        link.dataset.mobileEntry = '';
         source.before(link);
       } else {
         const wrapper = document.createElement('div');
         wrapper.dataset.localZh = 'blog-link-shell';
+        if (hero?.contains(source)) wrapper.dataset.entryBreakpoint = 'desktop';
         wrapper.append(link);
         if (hero?.contains(source)) {
           const row = source.parentElement.parentElement;

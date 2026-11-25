@@ -12,6 +12,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import parse_qs, urlsplit
 from urllib.request import Request, urlopen
 from uuid import uuid4
+from native_chinese import localize_native
 
 ORIGIN = "https://www.c-na.dev"
 CACHE = Path(__file__).with_name("snapshot")
@@ -67,8 +68,10 @@ def load_response(key, path, variant, mobile, html_page, offline, refresh):
     metadata = directory / "response.json"
     if metadata.exists() and (offline or not refresh):
         record = json.loads(metadata.read_text(encoding="utf-8"))
-        return (record["status"], record["content_type"],
-                (directory / record.get("body", "body")).read_bytes(), record.get("headers", {}))
+        content = (directory / record.get("body", "body")).read_bytes()
+        if any(kind in record['content_type'] for kind in ('javascript', 'text/html', 'text/x-component')):
+            content = localize_native(content)
+        return record["status"], record["content_type"], content, record.get("headers", {})
 
     if offline:
         return 404, "text/plain; charset=utf-8", b"Resource is not in the local snapshot.", {}

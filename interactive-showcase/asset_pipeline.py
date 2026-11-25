@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 from scene_performance import optimize_scene
+from native_chinese import localize_native
 
 ROOT = Path(__file__).resolve().parent
 MANIFEST = ROOT / 'asset-manifest.json'
@@ -28,7 +29,7 @@ def version():
         if any(kind in record['content_type'] for kind in ('text/', 'javascript', 'json')):
             content = content.replace(b'\r\n', b'\n')
         digest.update(hashlib.sha256(content).digest())
-    for name in ('localize.js', 'localize.css', 'zh-CN.tsv', 'asset_pipeline.py', 'build_vercel.py', 'local_zh.py', 'scene_performance.py'):
+    for name in ('localize.js', 'localize.css', 'zh-CN.tsv', 'asset_pipeline.py', 'build_vercel.py', 'local_zh.py', 'scene_performance.py', 'native_chinese.py', 'native-zh.json', 'compile_chinese.cjs'):
         digest.update((ROOT / name).read_bytes().replace(b'\r\n', b'\n'))
     for path in sorted([*(ROOT / 'photography').rglob('*'), *(ROOT / 'contacts').rglob('*')]):
         if path.is_file():
@@ -39,7 +40,7 @@ def version():
 
 def rewrite(content, release):
     # Avoid Vercel's reserved Next Image endpoint, which may re-encode snapshots.
-    text = re.sub(r'(?<![\w./-])/_next/image\b', '/__showcase-image', optimize_scene(content.decode('utf-8')))
+    text = re.sub(r'(?<![\w./-])/_next/image\b', '/__showcase-image', optimize_scene(localize_native(content).decode('utf-8')))
     return ASSET_PATH.sub(lambda match: PREFIX + release + match.group(), text).encode('utf-8')
 
 

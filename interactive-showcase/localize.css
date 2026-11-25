@@ -315,3 +315,12 @@ article[aria-labelledby="cs-title"] aside a[href*="laelaps.c-na.dev"] {
   .wechat-contact-qr { width: 128px; height: 128px; }
   .wechat-contact-account { font-size: 20px; }
 }
+
+/* 手机仅使用自己的调试/作品入口；桌面派生入口不得穿透断点。 */
+@media (max-width: 767px) {
+  [data-entry-breakpoint="desktop"] { display: none !important; }
+  [data-hero-text] { min-height: 0 !important; padding: 28px 20px 40px !important; gap: 18px !important; }
+  #hero-name { font-size: clamp(30px, 8.5vw, 44px) !important; line-height: 1.18 !important; overflow-wrap: anywhere; }
+  [data-mobile-actions] { width: min(100%, 280px); align-items: stretch; }
+  [data-mobile-actions] > a { width: 100%; box-sizing: border-box; min-height: 44px; }
+}

@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 from urllib.parse import urlsplit
 from asset_pipeline import MANIFEST, records, rewrite, version, image_key
+from native_chinese import verify_native_inputs, localize_native
 
 ROOT = Path(__file__).resolve().parent
 
@@ -15,6 +16,7 @@ def main():
     options = parser.parse_args()
     output = Path(options.output).resolve() if options.output else ROOT / 'public'
     output.mkdir(exist_ok=True)
+    verify_native_inputs(records())
     manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
     release = manifest['version']
     if release != version():
@@ -44,6 +46,9 @@ def main():
         target_v = versioned / relative
         target_v.parent.mkdir(parents=True, exist_ok=True)
         content = target.read_bytes()
+        if 'javascript' in record['content_type']:
+            content = localize_native(content)
+            target.write_bytes(content)
         if any(kind in record['content_type'] for kind in ('javascript', 'text/css', 'json')):
             content = rewrite(content, release)
         target_v.write_bytes(content)
