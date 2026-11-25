@@ -17,6 +17,34 @@
     location.assign('/' + target.hash);
   }, true);
 
+  // Keep every tab title free of the original author's name, including
+  // metadata applied later by React. Run before waiting for page assets.
+  function cleanPageTitle() {
+    const cleaned = document.title.replace(/\bSina\s+Gh?olizadeh\b/gi, '')
+      .replace(/\bsina-developer\b/gi, '').replace(/\bSina(?:'s)?\b/gi, '')
+      .replace(/Case study/gi, '案例详情').split(/\s*[·|]\s*/).map(part => part.trim()).filter(Boolean).join(' · ');
+    if (cleaned !== document.title) document.title = cleaned || '欢迎访问二十四调试';
+  }
+  cleanPageTitle();
+  new MutationObserver(cleanPageTitle).observe(document.head, { subtree: true, childList: true, characterData: true });
+
+  // Warm only destinations the visitor points at. Native navigation and the
+  // existing image fade stay intact; no overlay or new transition is added.
+  const prefetchedCases = new Set();
+  function warmCase(event) {
+    if (navigator.connection?.saveData || prefetchedCases.size >= 3) return;
+    const link = event.target instanceof Element && event.target.closest('a[href]');
+    if (!link || link.origin !== location.origin || !link.pathname.startsWith('/works/') || link.pathname === location.pathname || prefetchedCases.has(link.href)) return;
+    prefetchedCases.add(link.href);
+    const resource = document.createElement('link');
+    resource.rel = 'prefetch';
+    resource.as = 'document';
+    resource.href = link.href;
+    document.head.append(resource);
+  }
+  document.addEventListener('pointerover', warmCase, { passive: true });
+  document.addEventListener('focusin', warmCase);
+
   // Download alongside the page; DOM translation still waits for hydration.
   const dictionaryResponse = fetch('/__zh/messages.tsv').then(async response => {
     if (!response.ok) throw new Error('无法读取简体中文词典');

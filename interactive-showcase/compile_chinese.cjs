@@ -85,6 +85,10 @@ const overrides = {
   'usage:': '用法：',
 };
 for (const [key, value] of Object.entries(overrides)) dictionary.set(key, value);
+function cleanTitle(value) {
+  return value.replace(/\bSina\s+Gh?olizadeh\b/gi, '').replace(/\bsina-developer\b/gi, '')
+    .replace(/\bSina(?:'s)?\b/gi, '').split(/\s*[·|]\s*/).map(x => x.trim()).filter(Boolean).join(' · ');
+}
 function text(value) {
   if (value.startsWith('/cdn-cgi/l/email-protection')) return 'mailto:ershisigu@qq.com';
   const clock = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(value);
@@ -92,7 +96,13 @@ function text(value) {
   value = value.replaceAll('hi@c-na.dev', 'ershisigu@qq.com');
   const key = value.trim().replace(/\s+/g, ' ');
   let result = dictionary.get(key);
-  if (result === undefined && value.includes(' · Case study')) result = value.replace(' · Case study', ' · 案例详情').replaceAll('Sina Gholizadeh', '二十四调试');
+  if (result === undefined && /[·|]/.test(value) && /\bSina\b/i.test(value)) {
+    const leadingSeparator = /^\s*[·|]/.test(value);
+    value = cleanTitle(value);
+    if (leadingSeparator && value) value = ' · ' + value;
+    result = dictionary.get(value.trim().replace(/\s+/g, ' '));
+  }
+  if (result === undefined && value.includes(' · Case study')) result = value.replace(' · Case study', ' · 案例详情');
   if (result === undefined) return value;
   return value.match(/^\s*/)[0] + result + value.match(/\s*$/)[0];
 }
@@ -100,7 +110,8 @@ function data(value) {
   if (typeof value === 'string') return text(value);
   if (Array.isArray(value)) return value.map(data);
   if (value && typeof value === 'object') {
-    const result = Object.fromEntries(Object.entries(value).map(([key, val]) => [key, data(val)]));
+    const technical = new Set(['id', 'slug', 'type', 'href', 'src', 'url', 'path', 'filename', 'command', 'icon', 'mesh']);
+    const result = Object.fromEntries(Object.entries(value).map(([key, val]) => [key, technical.has(key) ? val : data(val)]));
     if (value.id === 'hero-name') result.children = '二十四直播调试';
     if (value.lang === 'en') result.lang = 'zh-CN';
     return result;
@@ -167,7 +178,11 @@ function javascript(source) {
           }
         }
       }
-      let next = /^[a-f0-9]+:(?:I|T|\[|\{)/m.test(n.value) ? flight(n.value) : text(n.value);
+      let next;
+      if (/^\s*[\[{]/.test(n.value)) {
+        try { next = JSON.stringify(data(JSON.parse(n.value))); } catch {}
+      }
+      if (next === undefined) next = /^[a-f0-9]+:(?:I|T|\[|\{)/m.test(n.value) ? flight(n.value) : text(n.value);
       if (next !== n.value) edits.push([n.start, n.end, JSON.stringify(next)]);
     },
     TemplateElement(p) {
@@ -210,6 +225,7 @@ function markup(source) {
     return translated === decoded ? all : `${key}="${escape(translated)}"`;
   }).replace(/(<h1\b[^>]*\bid="hero-name"[^>]*>)[\s\S]*?(<\/h1>)/, '$1二十四直播调试$2');
   return source.replace(/<!--native-script-(\d+)-->/g, (_, index) => scripts[+index])
+    .replace(/<title>([\s\S]*?)<\/title>/g, (_, title) => '<title>' + escape(cleanTitle(decode(title))) + '</title>')
     .replace(/(<html\b[^>]*\blang=")[^"]*(")/, '$1zh-CN$2')
     .replace(/(<span\b[^>]*class="__cf_email__"[^>]*>)[\s\S]*?(<\/span>)/g, '$1ershisigu@qq.com$2')
     .replace(/href="\/cdn-cgi\/l\/email-protection[^"]*"/g, 'href="mailto:ershisigu@qq.com"');

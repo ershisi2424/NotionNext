@@ -13,6 +13,7 @@ from urllib.parse import parse_qs, urlsplit
 from urllib.request import Request, urlopen
 from uuid import uuid4
 from native_chinese import localize_native
+from case_refinements import refine_case_images
 
 ORIGIN = "https://www.c-na.dev"
 CACHE = Path(__file__).with_name("snapshot")
@@ -71,6 +72,8 @@ def load_response(key, path, variant, mobile, html_page, offline, refresh):
         content = (directory / record.get("body", "body")).read_bytes()
         if any(kind in record['content_type'] for kind in ('javascript', 'text/html', 'text/x-component')):
             content = localize_native(content)
+        if 'javascript' in record['content_type']:
+            content = refine_case_images(content.decode('utf-8')).encode('utf-8')
         return record["status"], record["content_type"], content, record.get("headers", {})
 
     if offline:
