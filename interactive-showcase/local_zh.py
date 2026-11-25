@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent
 LOCALIZATION = b'<link rel="preload" href="/__zh/messages.tsv" as="fetch" crossorigin="anonymous"><link rel="stylesheet" href="/__zh/localize.css"><script defer src="/__zh/localize.js"></script>'
 # 请求地址与可直接修改的本地文件一一对应，不允许按任意路径读文件。
 ASSETS = {
+    "/__zh/contacts/wechat-qr.png": ("contacts/wechat-qr.png", "image/png"),
     "/__zh/localize.css": ("localize.css", "text/css; charset=utf-8"),
     "/__zh/localize.js": ("localize.js", "application/javascript; charset=utf-8"),
     "/__zh/messages.tsv": ("zh-CN.tsv", "text/tab-separated-values; charset=utf-8"),

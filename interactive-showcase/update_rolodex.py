@@ -14,6 +14,7 @@ from mirror import CACHE, atomic_write
 
 ROOT = Path(__file__).resolve().parent
 EMAIL = re.search(r"const contactEmail = '([^']+)';", (ROOT / "localize.js").read_text(encoding="utf-8-sig"))[1]
+WECHAT = re.search(r"const contactWechat = '([^']+)';", (ROOT / "localize.js").read_text(encoding="utf-8-sig"))[1]
 LABELS = ("邮箱", "微信", "GitHub", "简历")
 FONT = Path(r"C:\Windows\Fonts\msyh.ttc")
 BOLD = Path(r"C:\Windows\Fonts\msyhbd.ttc")
@@ -49,6 +50,12 @@ def make_cards():
             label(44, y + 335, EMAIL, 55, bold=True)
             draw.rectangle((44, y + 480, 286, y + 570), fill=teal, outline=ink, width=4)
             label(76, y + 491, "写邮件 ↗", 37, paper, True)
+        elif index == 1:
+            label(44, y + 271, "微信号", 35)
+            label(44, y + 335, WECHAT, 55, bold=True)
+            qr = Image.open(ROOT / 'contacts' / 'wechat-qr.png').convert('RGBA')
+            qr = qr.resize((320, 320), Image.Resampling.NEAREST)
+            image.alpha_composite(qr, (650, y + 250))
         else:
             label(44, y + 333, "暂未添加", 55, bold=True)
     stream = BytesIO()

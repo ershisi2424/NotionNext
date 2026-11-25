@@ -54,6 +54,7 @@ def main():
         shutil.copyfile(ROOT / name, zh / name)
     shutil.copyfile(ROOT / 'zh-CN.tsv', zh / 'messages.tsv')
     shutil.copytree(ROOT / 'photography', zh / 'photography', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'contacts', zh / 'contacts', dirs_exist_ok=True)
     shutil.copytree(zh, versioned / '__zh', dirs_exist_ok=True)
     localize = versioned / '__zh' / 'localize.js'
     localize.write_bytes(rewrite(localize.read_bytes(), release))

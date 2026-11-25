@@ -123,6 +123,7 @@
   const obsStudioUrl = 'https://obsproject.com/';
   const douyinLiveUrl = 'https://streamingtool.douyin.com/';
   const contactEmail = 'ershisigu@qq.com';
+  const contactWechat = 'G024ovo';
   const oldEmail = /hi@c-na\.dev/gi;
   const excluded = 'script, style, noscript, svg, canvas, code, textarea, [contenteditable], [data-local-zh]';
   const month = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, June: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
@@ -255,7 +256,8 @@
       element.dataset.wechatContact = '';
       if (element.getAttribute('href') !== '/#contact-wechat') element.setAttribute('href', '/#contact-wechat');
       element.removeAttribute('target');
-      if (element.getAttribute('aria-label') !== '微信') element.setAttribute('aria-label', '微信');
+      const label = '微信：' + contactWechat + '，查看联系方式';
+      if (element.getAttribute('aria-label') !== label) element.setAttribute('aria-label', label);
     }
     if (element.matches('article[aria-labelledby="cs-title"]') && location.pathname === '/works/iconly-pro') {
       element.dataset.debugCaseOne = '';
@@ -469,7 +471,7 @@
     }
     if (parent.matches('#contact [role="tab"][id$="-tab-1"]') && key === 'LinkedIn') next = '微信';
     if (parent.closest('[data-wechat-contact]')) {
-      if (['LinkedIn', 'Open LinkedIn', '领英', '打开领英'].includes(key)) next = '微信';
+      if (['LinkedIn', 'Open LinkedIn', '领英', '打开领英', '微信'].includes(key)) next = '微信：' + contactWechat;
       if (key === '(opens in a new tab)') next = '';
     }
     const obsCase = parent.closest('[data-obs-case]');
@@ -1017,29 +1019,89 @@
     if (!openWechatOnSync || !tab) return;
     openWechatOnSync = false;
     tab.click();
-    document.getElementById('contact')?.scrollIntoView();
+    requestAnimationFrame(() => {
+      const account = document.getElementById('wechat-account');
+      (document.getElementById('contact-wechat') ?? document.getElementById('contact'))?.scrollIntoView({ block: 'center' });
+      account?.focus({ preventScroll: true });
+    });
   }
 
   window.addEventListener('hashchange', () => {
     openWechatOnSync = location.hash === '#contact-wechat';
     openWechatContact();
   });
-  document.addEventListener('click', (event) => {
-    if (location.hash === '#contact-wechat' && event.target instanceof Element &&
-        event.target.closest('[data-wechat-contact]')) {
-      openWechatOnSync = true;
-      openWechatContact();
-    }
-  });
+  document.addEventListener('click', event => {
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || location.pathname !== '/') return;
+    const link = event.target instanceof Element && event.target.closest('[data-wechat-contact]');
+    if (!link) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (location.hash !== '#contact-wechat') history.pushState(history.state, '', location.pathname + location.search + '#contact-wechat');
+    openWechatOnSync = true;
+    openWechatContact();
+  }, true);
 
   function syncWechatPlaceholder() {
     const panel = document.querySelector('#contact [role="tabpanel"] > div:nth-child(2)');
-    if (!panel || panel.querySelector('[data-local-zh="wechat-placeholder"]')) return;
-    const message = document.createElement('p');
-    message.dataset.localZh = 'wechat-placeholder';
-    message.className = 'm-0 text-sm leading-6';
-    message.textContent = '微信联系方式待补充。';
-    panel.append(message);
+    if (!panel || panel.querySelector('[data-local-zh="wechat-card"]')) return;
+    panel.querySelector('[data-local-zh="wechat-placeholder"]')?.remove();
+    const card = document.createElement('div');
+    card.dataset.localZh = 'wechat-card';
+    card.id = 'contact-wechat';
+    card.className = 'wechat-contact-card';
+    const details = document.createElement('div');
+    details.className = 'wechat-contact-details';
+    const label = document.createElement('span');
+    label.className = 'text-xs leading-[18px] text-ink-2';
+    label.textContent = '微信联系我';
+    const account = document.createElement('span');
+    account.id = 'wechat-account';
+    account.tabIndex = -1;
+    account.className = 'wechat-contact-account';
+    account.textContent = contactWechat;
+    const actions = document.createElement('div');
+    actions.className = 'flex flex-wrap items-center gap-2.5';
+    const template = document.querySelector('#contact [role="tabpanel"] > div:first-child button');
+    const copy = document.createElement('button');
+    copy.type = 'button';
+    copy.className = template?.className ?? 'wechat-copy-button';
+    const icon = template?.querySelector('svg');
+    if (icon) copy.append(icon.cloneNode(true));
+    copy.append('复制微信号');
+    const status = document.createElement('span');
+    status.className = 'text-xs';
+    status.setAttribute('role', 'status');
+    let feedbackTimer;
+    copy.addEventListener('click', async event => {
+      event.stopPropagation();
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(contactWechat);
+        copied = true;
+      } catch {
+        const field = document.createElement('textarea');
+        field.value = contactWechat;
+        field.style.cssText = 'position:fixed;left:-9999px;top:0';
+        document.body.append(field);
+        field.select();
+        try { copied = document.execCommand('copy'); } catch {}
+        field.remove();
+        copy.focus({ preventScroll: true });
+      }
+      status.textContent = copied ? '已复制' : '请长按或选中微信号复制';
+      clearTimeout(feedbackTimer);
+      feedbackTimer = setTimeout(() => { status.textContent = ''; }, 2500);
+    });
+    actions.append(copy, status);
+    details.append(label, account, actions);
+    const qr = document.createElement('img');
+    qr.src = '/__zh/contacts/wechat-qr.png';
+    qr.width = 160;
+    qr.height = 160;
+    qr.className = 'wechat-contact-qr';
+    qr.alt = '微信 G024ovo 的个人二维码，使用微信扫一扫添加';
+    card.append(details, qr);
+    panel.append(card);
   }
 
   scan(document.body);
