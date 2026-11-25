@@ -443,7 +443,7 @@ const nextConfig = {
   }
   ,
   experimental: {
-    // cpus: 1,
+    ...(process.env.NEXT_BUILD_CPUS ? { cpus: Math.max(1, Number.parseInt(process.env.NEXT_BUILD_CPUS, 10) || 1) } : {}),
     scrollRestoration: true,
     // 性能优化实验性功能
     optimizePackageImports: ['@heroicons/react', 'lodash']
