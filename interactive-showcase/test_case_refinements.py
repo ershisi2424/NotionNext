@@ -22,6 +22,23 @@ class CaseRefinementTests(unittest.TestCase):
             count += 1
         self.assertEqual(count, 3)
 
+    def test_case_navigation_preserves_original_chess_transition(self):
+        count = 0
+        for record, body in records():
+            if 'javascript' not in record['content_type']:
+                continue
+            source = body.read_bytes().decode('utf8')
+            if '"PageTransition",()=>d' not in source:
+                continue
+            updated = refine_case_images(source)
+            self.assertIn('case-chess-navigation-v1', updated)
+            self.assertIn('window.addEventListener("desk-case-navigate",navigate)', updated)
+            self.assertIn('C?"covered":"idle"', updated)
+            self.assertIn('image.decode().catch', updated)
+            self.assertEqual(updated, refine_case_images(updated))
+            count += 1
+        self.assertEqual(count, 1)
+
     def test_all_initial_tab_titles_omit_original_author(self):
         count = 0
         for record, body in records():

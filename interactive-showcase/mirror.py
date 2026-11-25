@@ -38,6 +38,15 @@ RESPONSE_HEADERS = (
     "Cache-Control", "Vary", "X-Nextjs-Postponed", "X-Nextjs-Prerender", "X-Nextjs-Stale-Time",
 )
 CASE_NAVIGATION = b"""<script>
+try {
+  if (sessionStorage.getItem("desk:case-cover") === location.pathname) {
+    const cover = document.createElement('div');
+    cover.id = 'desk-case-loading-cover';
+    cover.style.cssText = 'position:fixed;inset:0;background:#100f0c;z-index:70;pointer-events:auto';
+    document.documentElement.appendChild(cover);
+    setTimeout(() => cover.remove(), 6000);
+  }
+} catch {}
 document.addEventListener('click', function(event) {
   if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   const link = event.target instanceof Element && event.target.closest('a[href]');
@@ -45,7 +54,10 @@ document.addEventListener('click', function(event) {
   if (!link.pathname.startsWith('/works/') || link.pathname === location.pathname) return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  location.assign(link.href);
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.dispatchEvent(new CustomEvent("desk-case-navigate", {cancelable:true, detail:link.href}))) {
+    location.assign(link.href);
+  }
 }, true);
 </script>"""
 
