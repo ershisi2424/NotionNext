@@ -1,0 +1,3 @@
+scripts/tencent/*.sh text eol=lf
+scripts/tencent/*.conf text eol=lf
+scripts/tencent/*.example text eol=lf
